@@ -3,7 +3,7 @@
 [![Code CppVersion](https://img.shields.io/badge/C++-11+-blue)](https://img.shields.io/badge/C++-11+-blue)
 [![License](https://img.shields.io/badge/licence-BSD--3--Clause-green)](https://img.shields.io/badge/license-BSD--3--Clause-green)
 
-Library for statistics functions with simple C++,
+Library of statistical functions and classes in simple C++,
 compatible for different sequence containers of different numeric data types.
 
 ## Description
