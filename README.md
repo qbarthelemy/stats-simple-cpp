@@ -17,7 +17,7 @@ The goal of this header-only library is to mimic some functions of
 no advanced dependencies like [boost](https://github.com/boostorg/boost),
 [mlpack](https://github.com/mlpack/mlpack)
 or [Eigen](https://gitlab.com/libeigen/eigen));
-- generic functions, compatible for different
+- generic templated functions, compatible for different
 [sequence containers](https://en.cppreference.com/w/cpp/named_req/SequenceContainer)
 (`std::list`, `std::vector`, `std::deque`) 
 of different numeric data types (`unsigned int`, `int`, `float`, `double`).
@@ -26,7 +26,7 @@ of different numeric data types (`unsigned int`, `int`, `float`, `double`).
 
 #### Maths.hpp
 
-`gcd`, `factorial`
+`gcd`, `factorial`, `prod`
 
 #### Stats.hpp
 
@@ -40,8 +40,8 @@ Others: `rankdata`
 
 #### CSimpleLinearRegression.hpp
 
-Class `SimpleLinearRegression` by Ordinary Least Squares, with `fit`,
-`predict`, and `score` (coefficient of determination R²).
+Class `SimpleLinearRegression`, with `fit`, `predict`, and `score`
+(coefficient of determination R²).
 
 
 ## Example
