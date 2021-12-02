@@ -8,8 +8,7 @@
 /**
 * Simple Linear Regression by Ordinary Least Squares.
 *
-* For more details, see
-* https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html
+* @see [sklearn.linear_model.LinearRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html)
 */
 class SimpleLinearRegression
 {
@@ -23,6 +22,11 @@ public:
 
 	/**
 	* Fit linear model.
+	*
+	* @tparam ContType The type of the sequence containers.
+	*
+	* @param x Input sequence container containing training values.
+	* @param y Input sequence container containing target values.
 	*/
 	template<typename ContType>
 	void fit(const ContType& x, const ContType& y)
@@ -51,7 +55,13 @@ public:
 
 	/**
 	* Predict using the linear model.
-	* Data type of output is double, to keep the maximum of numerical precision.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Output sequence container containing predicted values from `x`, whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	ContType<double, std::allocator<double>> predict(const ContType<ValType, Alloc>& x)
@@ -67,6 +77,14 @@ public:
 
 	/**
 	* Return the coefficient of determination of the prediction.
+	*
+	* @tparam ContType The type of the sequence containers.
+	* @tparam ValType The numeric data type of the values of the sequence containers.
+	*
+	* @param x Input sequence container containing test values.
+	* @param y Input sequence container containing true predictions.
+	*
+	* @return R² of `predict(x)` wrt. `y`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double score(const ContType<ValType, Alloc>& x, const ContType<ValType, Alloc>& y)

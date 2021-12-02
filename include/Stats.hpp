@@ -13,6 +13,12 @@ namespace Stats
 
 	/**
 	* Mean.
+	*
+	* @tparam ContType The type of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Mean of `x`.
 	*/
 	template<typename ContType>
 	double mean(const ContType& x)
@@ -26,7 +32,15 @@ namespace Stats
 	}
 
 	/**
-	* Variance, with degree of freedom.
+	* Variance.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	* @param ddof Degree of freedom.
+	*
+	* @return Variance of `x`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double var(const ContType<ValType, Alloc>& x, size_t ddof = 0)
@@ -43,7 +57,14 @@ namespace Stats
 	}
 
 	/**
-	* Standard deviation, with degree of freedom.
+	* Standard deviation.
+	*
+	* @tparam ContType The type of the sequence container.
+	*
+	* @param x Input sequence container.
+	* @param ddof Degree of freedom.
+	*
+	* @return Standard deviation of `x`.
 	*/
 	template<typename ContType>
 	double std(const ContType& x, size_t ddof = 0)
@@ -54,6 +75,12 @@ namespace Stats
 
 	/**
 	* Median.
+	*
+	* @tparam ContType The type of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Median of `x`.
 	*/
 	template<typename ContType>
 	double median(const ContType& x)
@@ -75,17 +102,24 @@ namespace Stats
 
 	/**
 	* Median absolute deviation.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Median absolute deviation of `x`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double median_abs_deviation(const ContType<ValType, Alloc>& x)
 	{
-		double med = median(x);
+		double med = Stats::median(x);
 
 		ContType<double, std::allocator<double>> x_centered(x.size()), x_centered_abs(x.size());
 		std::transform(x.begin(), x.end(), x_centered.begin(), std::bind2nd(std::minus<double>(), med));
 		std::transform(x_centered.begin(), x_centered.end(), x_centered_abs.begin(), static_cast<double(*)(double)>(&std::abs));
 
-		double mad = median(x_centered_abs);
+		double mad = Stats::median(x_centered_abs);
 		return mad;
 	}
 
@@ -93,7 +127,13 @@ namespace Stats
 
 	/**
 	* Center values with respect their mean.
-	* Data type of output is double, to keep the maximum of numerical precision.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Output sequence container containing the centered version of `x`, whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	typename ContType<double, std::allocator<double>> center(const ContType<ValType, Alloc>& x)
@@ -106,8 +146,15 @@ namespace Stats
 	}
 
 	/**
-	* Standard score (z-score), with degree of freedom.
-	* Data type of output is double, to keep the maximum of numerical precision.
+	* Standard score (z-score).
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	* @param ddof Degree of freedom.
+	*
+	* @return Output sequence container containing the z-scores of `x`, whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	typename ContType<double, std::allocator<double>> zscore(const ContType<ValType, Alloc>& x, size_t ddof = 0)
@@ -131,6 +178,13 @@ namespace Stats
 
 	/**
 	* Pearson product-moment correlation coefficient.
+	*
+	* @tparam ContType The type of the sequence containers.
+	* @tparam ValType The numeric data type of the values of the sequence containers.
+	*
+	* @param x, y Input sequence containers.
+	*
+	* @return Pearson product-moment correlation coefficient of `x` and `y`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double pearsonr(const ContType<ValType, Alloc>& x, const ContType<ValType, Alloc>& y)
@@ -158,6 +212,13 @@ namespace Stats
 
 	/**
 	* Spearman rank-order correlation coefficient.
+	*
+	* @tparam ContType The type of the sequence containers.
+	* @tparam ValType The numeric data type of the values of the sequence containers.
+	*
+	* @param x, y Input sequence containers.
+	*
+	* @return Spearman rank-order correlation coefficient of `x` and `y`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double spearmanr(const ContType<ValType, Alloc>& x, const ContType<ValType, Alloc>& y)
@@ -190,6 +251,13 @@ namespace Stats
 
 	/**
 	* Assign ranks to data.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Output sequence container containing increasing ranks of values of `x`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	typename ContType<unsigned int, std::allocator<unsigned int>> rankdata(const ContType<ValType, Alloc>& x)
