@@ -1,10 +1,12 @@
 #include <cmath>
 #include <numeric>
 #include <functional>
+#include <algorithm>
 
 
 namespace Maths
 {
+	// --- Arithmetic --- //
 
 	/**
 	* Greatest common divisor.
@@ -58,6 +60,8 @@ namespace Maths
 		return fact;
 	}
 
+	// --- BasicFunctions --- //
+
 	/**
 	* Product of values.
 	*
@@ -75,6 +79,44 @@ namespace Maths
 
 		ContType::value_type p = std::accumulate(x.begin(), x.end(), static_cast<ContType::value_type>(1), std::multiplies<ContType::value_type>());
 		return p;
+	}
+
+	/**
+	* Absolute value, element-wise.
+	*
+	* @tparam ContType The type of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Output sequence container containing the element-wise absolute value of `x`.
+	*/
+	template<typename ContType>
+	ContType absolute(const ContType& x)
+	{
+		ContType x_abs(x.size());
+		std::transform(x.begin(), x.end(), x_abs.begin(), static_cast<ContType::value_type(*)(ContType::value_type)>(&std::abs));
+		return x_abs;
+	}
+
+	/**
+	* Inverse, element-wise.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Output sequence container containing the element-wise inverse of `x`,
+	* whose data type is double to keep the maximum of numerical precision.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	typename ContType<double, std::allocator<double>> inverse(const ContType<ValType, Alloc>& x)
+	{
+		//TODO: check non zero
+
+		ContType<double, std::allocator<double>> x_inverse(x.size());
+		std::transform(x.begin(), x.end(), x_inverse.begin(), [](const ValType e) { return 1.0 / static_cast<double>(e); });
+		return x_inverse;
 	}
 
 }

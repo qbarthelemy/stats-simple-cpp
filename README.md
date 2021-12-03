@@ -26,7 +26,8 @@ of different numeric data types (`unsigned int`, `int`, `float`, `double`).
 
 #### Maths.hpp
 
-`gcd`, `factorial`, `prod`
+`gcd`, `factorial`,
+`prod`, `absolute`, `inverse`,
 
 #### Stats.hpp
 
