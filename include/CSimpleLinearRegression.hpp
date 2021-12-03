@@ -100,9 +100,9 @@ public:
 		std::transform(y.begin(), y.end(), y_predict.begin(), res.begin(), std::minus<double>());
 		double ssres = std::inner_product(res.begin(), res.end(), res.begin(), 0.0);
 
-		double sy = std::accumulate(y_predict.begin(), y_predict.end(), 0.0);
-		double syy = std::inner_product(y_predict.begin(), y_predict.end(), y_predict.begin(), 0.0);
-		double sstot = syy - sy * sy / static_cast<double>(y_predict.size());
+		double sy = std::accumulate(y.begin(), y.end(), 0.0);
+		double syy = std::inner_product(y.begin(), y.end(), y.begin(), 0.0);
+		double sstot = syy - sy * sy / static_cast<double>(y.size());
 		double r2 = 1.0 - ssres / sstot;
 
 		return r2;
