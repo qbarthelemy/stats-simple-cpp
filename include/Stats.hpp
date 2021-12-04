@@ -5,6 +5,7 @@
 #include <functional>
 #include <algorithm>
 #include <vector>
+#include "Maths.hpp"
 
 
 namespace Stats
@@ -18,7 +19,7 @@ namespace Stats
 	*
 	* @param x Input sequence container.
 	*
-	* @return Mean of `x`.
+	* @return Arithmetic mean of `x`.
 	*/
 	template<typename ContType>
 	double mean(const ContType& x)
@@ -27,8 +28,51 @@ namespace Stats
 			throw std::invalid_argument("Input has not enough values for mean.");
 
 		double sum = std::accumulate(x.begin(), x.end(), 0.0);
-		double mean = sum / static_cast<double>(x.size());
-		return mean;
+		double a = sum / x.size();
+		return a;
+	}
+
+	/**
+	* Harmonic mean.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container, containing non-zero values.
+	*
+	* @return Harmonic mean of `x`.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	double hmean(const ContType<ValType, Alloc>& x)
+	{
+		if (x.size() == 0)
+			throw std::invalid_argument("Input has not enough values for hmean.");
+
+		ContType<double, std::allocator<double>> x_inverse = Maths::inverse(x);
+		double x_inv_sum = std::accumulate(x_inverse.begin(), x_inverse.end(), 0.0);
+		double h = x.size() / x_inv_sum;
+		return h;
+	}
+
+	/**
+	* Geometric mean.
+	*
+	* @tparam ContType The type of the sequence container.
+	*
+	* @param x Input sequence container, containing strictly positive values.
+	*
+	* @return Geometric mean of `x`.
+	*/
+	template<typename ContType>
+	double gmean(const ContType& x)
+	{
+		if (x.size() == 0)
+			throw std::invalid_argument("Input has not enough values for gmean.");
+		if (!Maths::is_positive(x))
+			throw std::invalid_argument("Input contains negative value(s).");
+
+		double g = std::pow(Maths::prod(x), 1.0 / x.size());
+		return g;
 	}
 
 	/**
@@ -52,7 +96,7 @@ namespace Stats
 
 		ContType<double, std::allocator<double>> x_centered = Stats::center(x);
 		double sxx = std::inner_product(x_centered.begin(), x_centered.end(), x_centered.begin(), 0.0);
-		double var = sxx / static_cast<double>(x.size() - ddof);
+		double var = sxx / (x.size() - ddof);
 		return var;
 	}
 
@@ -115,9 +159,9 @@ namespace Stats
 	{
 		double med = Stats::median(x);
 
-		ContType<double, std::allocator<double>> x_centered(x.size()), x_centered_abs(x.size());
+		ContType<double, std::allocator<double>> x_centered(x.size());
 		std::transform(x.begin(), x.end(), x_centered.begin(), std::bind2nd(std::minus<double>(), med));
-		std::transform(x_centered.begin(), x_centered.end(), x_centered_abs.begin(), static_cast<double(*)(double)>(&std::abs));
+		ContType<double, std::allocator<double>> x_centered_abs = Maths::absolute(x_centered);
 
 		double mad = Stats::median(x_centered_abs);
 		return mad;
@@ -133,7 +177,8 @@ namespace Stats
 	*
 	* @param x Input sequence container.
 	*
-	* @return Output sequence container containing the centered version of `x`, whose data type is double to keep the maximum of numerical precision.
+	* @return Output sequence container containing the centered version of `x`,
+	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	typename ContType<double, std::allocator<double>> center(const ContType<ValType, Alloc>& x)
@@ -154,7 +199,8 @@ namespace Stats
 	* @param x Input sequence container.
 	* @param ddof Degree of freedom.
 	*
-	* @return Output sequence container containing the z-scores of `x`, whose data type is double to keep the maximum of numerical precision.
+	* @return Output sequence container containing the z-scores of `x`,
+	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	typename ContType<double, std::allocator<double>> zscore(const ContType<ValType, Alloc>& x, size_t ddof = 0)
@@ -165,9 +211,9 @@ namespace Stats
 		if (size - ddof == 0)
 			throw std::invalid_argument("Size minus degree of freedom is 0.");
 
-		ContType<double, std::allocator<double>> x_centered = center(x);
+		ContType<double, std::allocator<double>> x_centered = Stats::center(x);
 		double sxx = std::inner_product(x_centered.begin(), x_centered.end(), x_centered.begin(), 0.0);
-		double std = std::sqrt(sxx / static_cast<double>(x.size() - ddof));
+		double std = std::sqrt(sxx / (x.size() - ddof));
 
 		ContType<double, std::allocator<double>> z(size);
 		std::transform(x_centered.begin(), x_centered.end(), z.begin(), std::bind2nd(std::divides<double>(), std));
@@ -235,7 +281,7 @@ namespace Stats
 		return r;
 	}
 
-	// --- StatisticalTests --- //
+	// --- Others --- //
 
 	template<typename ValType>
 	bool op_sort_increase(const std::pair<ValType, unsigned int>& x1, const std::pair<ValType, unsigned int>& x2)

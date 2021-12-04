@@ -6,6 +6,7 @@
 
 namespace Maths
 {
+
 	// --- Arithmetic --- //
 
 	/**
@@ -60,7 +61,23 @@ namespace Maths
 		return fact;
 	}
 
-	// --- BasicFunctions --- //
+	// --- MathematicalFunctions --- //
+
+	/**
+	* Check if all values are strictly positive.
+	*
+	* @tparam ContType The type of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Boolean checking if all values of `x` are strictly positive.
+	*/
+	template<typename ContType>
+	bool is_positive(const ContType& x)
+	{
+		bool check = std::all_of(x.begin(), x.end(), [](const ContType::value_type& e) { return e > 0; });
+		return check;
+	}
 
 	/**
 	* Product of values.
@@ -112,10 +129,11 @@ namespace Maths
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	typename ContType<double, std::allocator<double>> inverse(const ContType<ValType, Alloc>& x)
 	{
-		//TODO: check non zero
+		if (std::find(x.begin(), x.end(), static_cast<ValType>(0)) != x.end())
+			throw std::invalid_argument("Input contains zero value(s).");
 
 		ContType<double, std::allocator<double>> x_inverse(x.size());
-		std::transform(x.begin(), x.end(), x_inverse.begin(), [](const ValType e) { return 1.0 / static_cast<double>(e); });
+		std::transform(x.begin(), x.end(), x_inverse.begin(), [](const ValType& e) { return 1.0 / e; });
 		return x_inverse;
 	}
 

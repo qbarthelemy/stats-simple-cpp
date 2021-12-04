@@ -26,12 +26,14 @@ of different numeric data types (`unsigned int`, `int`, `float`, `double`).
 
 #### Maths.hpp
 
-`gcd`, `factorial`,
-`prod`, `absolute`, `inverse`,
+`gcd`, `factorial`
+
+Mathematical functions: `is_positive`, `prod`, `absolute`, `inverse`
 
 #### Stats.hpp
 
-Summary statistics: `mean`, `var`, `std`, `median`, `median_abs_deviation`
+Summary statistics: `mean`, `hmean`, `gmean`, `var`, `std`,
+`median`, `median_abs_deviation`
 
 Transformations: `center`, `zscore`
 
