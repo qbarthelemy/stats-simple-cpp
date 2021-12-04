@@ -28,14 +28,16 @@ of different numeric data types (`unsigned int`, `int`, `float`, `double`).
 
 `gcd`, `factorial`
 
-Mathematical functions: `is_positive`, `prod`, `absolute`, `inverse`
+Check functions: `is_positive`
+
+Mathematical functions: `prod`, `absolute`, `inverse`, `log`
 
 #### Stats.hpp
 
 Summary statistics: `mean`, `hmean`, `gmean`, `var`, `std`,
 `median`, `median_abs_deviation`
 
-Transformations: `center`, `zscore`
+Transformations: `center`, `zscore`, `gzscore`
 
 Correlation functions: `pearsonr`, `spearmanr`
 

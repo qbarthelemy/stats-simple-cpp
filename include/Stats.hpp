@@ -220,6 +220,26 @@ namespace Stats
 		return z;
 	}
 
+	/**
+	* Geometric standard score (geometric z-score).
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	* @param ddof Degree of freedom.
+	*
+	* @return Output sequence container containing the geometric z-scores of `x`,
+	* whose data type is double to keep the maximum of numerical precision.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	typename ContType<double, std::allocator<double>> gzscore(const ContType<ValType, Alloc>& x, size_t ddof = 0)
+	{
+		ContType<double, std::allocator<double>> x_log = Maths::log(x);
+		ContType<double, std::allocator<double>> gz = Stats::zscore(x_log, ddof);
+		return gz;
+	}
+
 	// --- CorrelationFunctions --- //
 
 	/**

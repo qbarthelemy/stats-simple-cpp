@@ -7,7 +7,7 @@
 namespace Maths
 {
 
-	// --- Arithmetic --- //
+	// ---  --- //
 
 	/**
 	* Greatest common divisor.
@@ -61,7 +61,7 @@ namespace Maths
 		return fact;
 	}
 
-	// --- MathematicalFunctions --- //
+	// --- CheckFunctions --- //
 
 	/**
 	* Check if all values are strictly positive.
@@ -78,6 +78,8 @@ namespace Maths
 		bool check = std::all_of(x.begin(), x.end(), [](const ContType::value_type& e) { return e > 0; });
 		return check;
 	}
+
+	// --- MathematicalFunctions --- //
 
 	/**
 	* Product of values.
@@ -135,6 +137,28 @@ namespace Maths
 		ContType<double, std::allocator<double>> x_inverse(x.size());
 		std::transform(x.begin(), x.end(), x_inverse.begin(), [](const ValType& e) { return 1.0 / e; });
 		return x_inverse;
+	}
+
+	/**
+	* Logarithm, element-wise.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Output sequence container containing the element-wise logarithm of `x`,
+	* whose data type is double to keep the maximum of numerical precision.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	typename ContType<double, std::allocator<double>> log(const ContType<ValType, Alloc>& x)
+	{
+		if (!Maths::is_positive(x))
+			throw std::invalid_argument("Input contains negative value(s).");
+
+		ContType<double, std::allocator<double>> x_log(x.size());
+		std::transform(x.begin(), x.end(), x_log.begin(), [](const ValType& e) { return std::log(e); });
+		return x_log;
 	}
 
 }
