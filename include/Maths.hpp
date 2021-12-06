@@ -1,18 +1,22 @@
+#include <stdexcept>
 #include <cmath>
 #include <numeric>
 #include <functional>
 #include <algorithm>
 
 
+/**
+* Mathematical functions
+*/
 namespace Maths
 {
 
-	// ---  --- //
+	// --- Integer input functions --- //
 
 	/**
 	* Greatest common divisor.
 	*
-	* @tparam ValType The numeric data type of the inputs.
+	* @tparam ValType The numeric data type of the inputs, integer-based.
 	*
 	* @param m, n Input values.
 	*
@@ -44,7 +48,7 @@ namespace Maths
 	/**
 	* Factorial.
 	*
-	* @tparam ValType The numeric data type of the input.
+	* @tparam ValType The numeric data type of the input, integer-based.
 	*
 	* @param n Input value.
 	*
@@ -61,7 +65,7 @@ namespace Maths
 		return fact;
 	}
 
-	// --- CheckFunctions --- //
+	// --- Checking functions --- //
 
 	/**
 	* Check if all values are strictly positive.
@@ -79,7 +83,7 @@ namespace Maths
 		return check;
 	}
 
-	// --- MathematicalFunctions --- //
+	// --- Aggregation functions --- //
 
 	/**
 	* Product of values.
@@ -96,9 +100,11 @@ namespace Maths
 		if (x.size() == 0)
 			throw std::invalid_argument("Input has not enough values for prod.");
 
-		ContType::value_type p = std::accumulate(x.begin(), x.end(), static_cast<ContType::value_type>(1), std::multiplies<ContType::value_type>());
-		return p;
+		ContType::value_type x_prod = std::accumulate(x.begin(), x.end(), static_cast<ContType::value_type>(1), std::multiplies<ContType::value_type>());
+		return x_prod;
 	}
+
+	// --- Element-wise functions --- //
 
 	/**
 	* Absolute value, element-wise.
@@ -134,9 +140,29 @@ namespace Maths
 		if (std::find(x.begin(), x.end(), static_cast<ValType>(0)) != x.end())
 			throw std::invalid_argument("Input contains zero value(s).");
 
-		ContType<double, std::allocator<double>> x_inverse(x.size());
-		std::transform(x.begin(), x.end(), x_inverse.begin(), [](const ValType& e) { return 1.0 / e; });
-		return x_inverse;
+		ContType<double, std::allocator<double>> x_inv(x.size());
+		std::transform(x.begin(), x.end(), x_inv.begin(), [](const ValType& e) { return 1.0 / e; });
+		return x_inv;
+	}
+
+	/**
+	* Power, element-wise.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	* @param exp Exponent.
+	*
+	* @return Output sequence container containing the element-wise power of `x` from `exp`,
+	* whose data type is double to keep the maximum of numerical precision.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	typename ContType<double, std::allocator<double>> pow(const ContType<ValType, Alloc>& x, double exp)
+	{
+		ContType<double, std::allocator<double>> x_pow(x.size());
+		std::transform(x.begin(), x.end(), x_pow.begin(), [exp](const double& e) { return std::pow(e, exp); });
+		return x_pow;
 	}
 
 	/**
