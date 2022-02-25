@@ -32,11 +32,11 @@ Checking functions: `is_positive`
 
 Aggregation functions: `prod`
 
-Element-wise functions: `absolute`, `inverse`, `pow`, `log`
+Element-wise functions: `absolute`, `reciprocal`, `pow`, `log`
 
 #### Stats.hpp
 
-Summary statistics: `mean`, `hmean`, `gmean`, `var`, `std`, `gstd`,
+Summary statistics: `mean`, `hmean`, `gmean`, `var`, `std`, `hstd`, `gstd`,
 `skewness`, `kurtosis`,
 `median`, `median_abs_deviation`
 

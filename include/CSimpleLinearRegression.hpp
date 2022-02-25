@@ -31,16 +31,16 @@ public:
 	template<typename ContType>
 	void fit(const ContType& x, const ContType& y)
 	{
-		if (x.size() != y.size())
+		size_t size = x.size();
+		if (size != y.size())
 			throw std::invalid_argument("Inputs have not the same size.");
-		if (x.size() < 2)
+		if (size < 2)
 			throw std::invalid_argument("Inputs have not enough values for fit.");
 
 		double sx = std::accumulate(x.begin(), x.end(), 0.0);
 		double sy = std::accumulate(y.begin(), y.end(), 0.0);
 		double sxx = std::inner_product(x.begin(), x.end(), x.begin(), 0.0);
 		double sxy = std::inner_product(x.begin(), x.end(), y.begin(), 0.0);
-		double size = static_cast<double>(x.size());
 		double num = size * sxy - sx * sy;
 		double denom = size * sxx - sx * sx;
 
@@ -61,7 +61,8 @@ public:
 	*
 	* @param x Input sequence container.
 	*
-	* @return Output sequence container containing predicted values from `x`, whose data type is double to keep the maximum of numerical precision.
+	* @return Output sequence container containing predicted values from `x`,
+	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	ContType<double, std::allocator<double>> predict(const ContType<ValType, Alloc>& x)
@@ -89,20 +90,21 @@ public:
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double score(const ContType<ValType, Alloc>& x, const ContType<ValType, Alloc>& y)
 	{
-		if (x.size() != y.size())
+		size_t size = x.size();
+		if (size != y.size())
 			throw std::invalid_argument("Inputs have not the same size.");
-		if (x.size() == 0)
+		if (size == 0)
 			throw std::invalid_argument("Inputs have not enough values for score.");
 
 		ContType<double, std::allocator<double>> y_predict = predict(x);
 
-		ContType<double, std::allocator<double>> res(y.size());
+		ContType<double, std::allocator<double>> res(size);
 		std::transform(y.begin(), y.end(), y_predict.begin(), res.begin(), std::minus<double>());
 		double ssres = std::inner_product(res.begin(), res.end(), res.begin(), 0.0);
 
 		double sy = std::accumulate(y.begin(), y.end(), 0.0);
 		double syy = std::inner_product(y.begin(), y.end(), y.begin(), 0.0);
-		double sstot = syy - sy * sy / static_cast<double>(y.size());
+		double sstot = syy - sy * sy / size;
 		double r2 = 1.0 - ssres / sstot;
 
 		return r2;

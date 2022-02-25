@@ -27,11 +27,12 @@ namespace Stats
 	template<typename ContType>
 	double mean(const ContType& x)
 	{
-		if (x.size() == 0)
+		size_t size = x.size();
+		if (size == 0)
 			throw std::invalid_argument("Input has not enough values for mean.");
 
 		double sx = std::accumulate(x.begin(), x.end(), 0.0);
-		return sx / x.size();
+		return sx / size;
 	}
 
 	/**
@@ -47,12 +48,13 @@ namespace Stats
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double hmean(const ContType<ValType, Alloc>& x)
 	{
-		if (x.size() == 0)
+		size_t size = x.size();
+		if (size == 0)
 			throw std::invalid_argument("Input has not enough values for hmean.");
 
-		ContType<double, std::allocator<double>> x_inv = Maths::inverse(x);
+		ContType<double, std::allocator<double>> x_inv = Maths::reciprocal(x);
 		double sxinv = std::accumulate(x_inv.begin(), x_inv.end(), 0.0);
-		return x.size() / sxinv;
+		return size / sxinv;
 	}
 
 	/**
@@ -67,12 +69,13 @@ namespace Stats
 	template<typename ContType>
 	double gmean(const ContType& x)
 	{
-		if (x.size() == 0)
+		size_t size = x.size();
+		if (size == 0)
 			throw std::invalid_argument("Input has not enough values for gmean.");
 		if (!Maths::is_positive(x))
 			throw std::invalid_argument("Input contains negative value(s).");
 
-		return std::pow(Maths::prod(x), 1.0 / x.size());
+		return std::pow(Maths::prod(x), 1.0 / size);
 	}
 
 	/**
@@ -89,14 +92,15 @@ namespace Stats
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double var(const ContType<ValType, Alloc>& x, size_t ddof = 0)
 	{
-		if (x.size() <= 1)
+		size_t size = x.size();
+		if (size <= 1)
 			throw std::invalid_argument("Input has not enough values for var.");
-		if (x.size() - ddof == 0)
+		if (size - ddof == 0)
 			throw std::invalid_argument("Size minus degree of freedom is 0.");
 
 		ContType<double, std::allocator<double>> x_cent = Stats::center(x);
 		double sxx = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
-		return sxx / (x.size() - ddof);
+		return sxx / (size - ddof);
 	}
 
 	/**
@@ -113,6 +117,24 @@ namespace Stats
 	double std(const ContType& x, size_t ddof = 0)
 	{
 		return std::sqrt(Stats::var(x, ddof));
+	}
+
+	/**
+	* Harmonic standard deviation.
+	*
+	* @tparam ContType The type of the sequence container, containing strictly positive values.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	* @param ddof Degree of freedom.
+	*
+	* @return Harmonic standard deviation of `x`.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	double hstd(const ContType<ValType, Alloc>& x, size_t ddof = 0)
+	{
+		ContType<double, std::allocator<double>> x_inv = Maths::reciprocal(x);
+		return 1.0 / Stats::std(x_inv, ddof);
 	}
 
 	/**
@@ -146,7 +168,8 @@ namespace Stats
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double skewness(const ContType<ValType, Alloc>& x)
 	{
-		if (x.size() <= 1)
+		size_t size = x.size();
+		if (size <= 1)
 			throw std::invalid_argument("Input has not enough values for skewness.");
 
 		ContType<double, std::allocator<double>> x_cent = Stats::center(x);
@@ -155,7 +178,7 @@ namespace Stats
 		ContType<double, std::allocator<double>> x_cent_3 = Maths::pow(x_cent, 3.0);
 		double sx3 = std::accumulate(x_cent_3.begin(), x_cent_3.end(), 0.0);
 
-		double skew = (sx3 * std::pow(x.size(), 0.5)) / std::pow(sx2, 1.5);
+		double skew = (sx3 * std::pow(size, 0.5)) / std::pow(sx2, 1.5);
 		return skew;
 	}
 
@@ -172,7 +195,8 @@ namespace Stats
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double kurtosis(const ContType<ValType, Alloc>& x)
 	{
-		if (x.size() <= 1)
+		size_t size = x.size();
+		if (size <= 1)
 			throw std::invalid_argument("Input has not enough values for kurtosis.");
 
 		ContType<double, std::allocator<double>> x_cent = Stats::center(x);
@@ -181,7 +205,7 @@ namespace Stats
 		ContType<double, std::allocator<double>> x_cent_4 = Maths::pow(x_cent, 4.0);
 		double sx4 = std::accumulate(x_cent_4.begin(), x_cent_4.end(), 0.0);
 
-		double kurt = (sx4 * x.size()) / (sx2 * sx2);
+		double kurt = (sx4 * size) / (sx2 * sx2);
 		return kurt;
 	}
 
@@ -287,7 +311,7 @@ namespace Stats
 
 		ContType<double, std::allocator<double>> x_cent = Stats::center(x);
 		double sxx = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
-		double std = std::sqrt(sxx / (x.size() - ddof));
+		double std = std::sqrt(sxx / (size - ddof));
 
 		ContType<double, std::allocator<double>> z(size);
 		std::transform(x_cent.begin(), x_cent.end(), z.begin(), std::bind2nd(std::divides<double>(), std));
@@ -329,9 +353,10 @@ namespace Stats
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double pearsonr(const ContType<ValType, Alloc>& x, const ContType<ValType, Alloc>& y)
 	{
-		if (x.size() != y.size())
+		size_t size = x.size();
+		if (size != y.size())
 			throw std::invalid_argument("Inputs have not the same size.");
-		if (x.size() == 0)
+		if (size == 0)
 			throw std::invalid_argument("Inputs have not enough values for pearsonr.");
 
 		ContType<double, std::allocator<double>> x_cent = Stats::center(x);
@@ -363,9 +388,10 @@ namespace Stats
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double spearmanr(const ContType<ValType, Alloc>& x, const ContType<ValType, Alloc>& y)
 	{
-		if (x.size() != y.size())
+		size_t size = x.size();
+		if (size != y.size())
 			throw std::invalid_argument("Inputs have not the same size.");
-		if (x.size() == 0)
+		if (size == 0)
 			throw std::invalid_argument("Inputs have not enough values for spearmanr.");
 
 		ContType<unsigned int, std::allocator<unsigned int>> xr = Stats::rankdata(x);

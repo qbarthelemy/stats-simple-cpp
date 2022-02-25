@@ -124,18 +124,18 @@ namespace Maths
 	}
 
 	/**
-	* Inverse, element-wise.
+	* Reciprocal, element-wise.
 	*
 	* @tparam ContType The type of the sequence container.
 	* @tparam ValType The numeric data type of the values of the sequence container.
 	*
 	* @param x Input sequence container.
 	*
-	* @return Output sequence container containing the element-wise inverse of `x`,
+	* @return Output sequence container containing the element-wise reciprocal/inverse of `x`,
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> inverse(const ContType<ValType, Alloc>& x)
+	typename ContType<double, std::allocator<double>> reciprocal(const ContType<ValType, Alloc>& x)
 	{
 		if (std::find(x.begin(), x.end(), static_cast<ValType>(0)) != x.end())
 			throw std::invalid_argument("Input contains zero value(s).");
