@@ -6,7 +6,7 @@
 
 
 /**
-* Simple Linear Regression by Ordinary Least Squares.
+* Simple linear regression, using ordinary least squares.
 *
 * @see [sklearn.linear_model.LinearRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html)
 */
@@ -14,14 +14,17 @@ class SimpleLinearRegression
 {
 public:
 
-	SimpleLinearRegression() { coeff = 1E42, intercept = 1E42; }
+	/**
+	* Create linear model.
+	*/
+	SimpleLinearRegression() { _coeff = 1E42, _intercept = 1E42; }
 
-	double get_coeff() { return coeff; }
+	double get_coeff() { return _coeff; }
 
-	double get_intercept() { return intercept; }
+	double get_intercept() { return _intercept; }
 
 	/**
-	* Fit linear model.
+	* Fit linear model, using ordinary least squares.
 	*
 	* @tparam ContType The type of the sequence containers.
 	*
@@ -45,10 +48,10 @@ public:
 		double denom = size * sxx - sx * sx;
 
 		if (denom != 0)
-			coeff = num / denom;
+			_coeff = num / denom;
 		else
-			coeff = std::numeric_limits<double>::quiet_NaN();
-		intercept = (sy - coeff * sx) / size;
+			_coeff = std::numeric_limits<double>::quiet_NaN();
+		_intercept = (sy - _coeff * sx) / size;
 
 		return;
 	}
@@ -71,7 +74,7 @@ public:
 		ContType<double, std::allocator<double>> y(x.size());
 		ContType<double, std::allocator<double>>::iterator y_it = y.begin();
 		for (; x_it != x.end() && y_it != y.end(); ++x_it, ++y_it)
-			*y_it = coeff * static_cast<double>(*x_it) + intercept;
+			*y_it = _coeff * static_cast<double>(*x_it) + _intercept;
 
 		return y;
 	}
@@ -112,5 +115,5 @@ public:
 
 protected:
 
-	double coeff, intercept;
+	double _coeff, _intercept;
 };
