@@ -68,7 +68,7 @@ namespace Maths
 	// --- Checking functions --- //
 
 	/**
-	* Check if all values are strictly positive.
+	* Check if all values of the container are strictly positive.
 	*
 	* @tparam ContType The type of the sequence container.
 	*
@@ -105,6 +105,27 @@ namespace Maths
 	}
 
 	// --- Element-wise functions --- //
+
+	/**
+	* Linear transformation, element-wise.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	* @param a Coefficient.
+	* @param b Intercept.
+	*
+	* @return Output sequence container containing the element-wise linear transformation of `x`,
+	* ie `y = a * x + b`.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	ContType<double, std::allocator<double>> linear(const ContType<ValType, Alloc>& x, double a, double b)
+	{
+		ContType<double, std::allocator<double>> y(x.size());
+		std::transform(x.begin(), x.end(), y.begin(), [a, b](const double& e) { return a * e + b; });
+		return y;
+	}
 
 	/**
 	* Absolute value, element-wise.
@@ -158,7 +179,7 @@ namespace Maths
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> pow(const ContType<ValType, Alloc>& x, double exp)
+	typename ContType<double, std::allocator<double>> power(const ContType<ValType, Alloc>& x, double exp)
 	{
 		ContType<double, std::allocator<double>> x_pow(x.size());
 		std::transform(x.begin(), x.end(), x_pow.begin(), [exp](const double& e) { return std::pow(e, exp); });
@@ -185,6 +206,75 @@ namespace Maths
 		ContType<double, std::allocator<double>> x_log(x.size());
 		std::transform(x.begin(), x.end(), x_log.begin(), [](const ValType& e) { return std::log(e); });
 		return x_log;
+	}
+
+	/**
+	* Exponential, element-wise.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Output sequence container containing the element-wise exponential of `x`,
+	* whose data type is double to keep the maximum of numerical precision.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	typename ContType<double, std::allocator<double>> exp(const ContType<ValType, Alloc>& x)
+	{
+		ContType<double, std::allocator<double>> x_exp(x.size());
+		std::transform(x.begin(), x.end(), x_exp.begin(), [](const ValType& e) { return std::exp(e); });
+		return x_exp;
+	}
+
+	/**
+	* Sigmoid, element-wise.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Output sequence container containing the element-wise sigmoid of `x`,
+	* whose data type is double to keep the maximum of numerical precision.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	typename ContType<double, std::allocator<double>> sigmoid(const ContType<ValType, Alloc>& x)
+	{
+		ContType<double, std::allocator<double>> x_sig(x.size());
+		std::transform(x.begin(), x.end(), x_sig.begin(), [](const ValType& e) { return 1.0 / (1.0 + std::exp(-e)); });
+		return x_sig;
+	}
+
+	// --- Others --- //
+
+	/**
+	* Set of the container.
+	*
+	* @tparam ContType The type of the sequence container.
+	*
+	* @param x Input sequence container.
+	* @param epsilon Threshold to detect distinct elements.
+	*
+	* @return Output sequence container containing distinct/non-repeating elements of `x`.
+	*/
+	template<typename ContType>
+	typename ContType set(const ContType& x, double epsilon = 1e-6)
+	{
+		ContType x_set = { x.front() };
+
+		bool is_in_set = false;
+		for (auto _x : x)
+		{
+			is_in_set = false;
+			for (auto _s : x_set)
+				if (std::fabs(static_cast<double>(_s) - static_cast<double>(_x)) < epsilon)
+					is_in_set = true;
+			if (!is_in_set)
+				x_set.push_back(_x);
+		}
+
+		return x_set;
 	}
 
 }
