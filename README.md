@@ -12,6 +12,7 @@ The goal of this header-only library is to mimic some functions of
 [NumPy](https://github.com/numpy/numpy) and
 [SciPy](https://github.com/scipy/scipy), and some classes of
 [scikit-learn](https://github.com/scikit-learn/scikit-learn) with:
+- simple Python-like syntax;
 - simple C++ code (compatible from C++11);
 - simple dependencies (use only [C++ Standard Library](https://en.cppreference.com/w/cpp/header),
 no advanced dependencies like [boost](https://github.com/boostorg/boost),
@@ -32,7 +33,10 @@ Checking functions: `is_positive`
 
 Aggregation functions: `prod`
 
-Element-wise functions: `absolute`, `reciprocal`, `pow`, `log`
+Element-wise functions: `linear`, `absolute`, `reciprocal`,
+`power`, `log`, `exp`, `sigmoid`
+
+Others: `set`
 
 #### Stats.hpp
 
@@ -44,13 +48,19 @@ Transformations: `center`, `zscore`, `gzscore`
 
 Correlation functions: `pearsonr`, `spearmanr`
 
+Metrics: `accuracy_score`
+
 Others: `rankdata`
 
 #### CSimpleLinearRegression.hpp
 
-Class `SimpleLinearRegression`, with `fit`, `predict`, and `score`
-(coefficient of determination R²).
+Class `SimpleLinearRegression`,
+with `fit`, `predict`, and `score` (coefficient of determination R²).
 
+#### CSimpleLogisticRegression.hpp
+
+Class `SimpleLogisticRegression` for binary classification,
+with `fit`, `predict`, and `score` (accuracy).
 
 ## Example
 
