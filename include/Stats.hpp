@@ -400,6 +400,40 @@ namespace Stats
 		return Stats::pearsonr(xr, yr);
 	}
 
+	// --- Metrics --- //
+
+	/**
+	* Return accuracy, for binary classification.
+	*
+	* @tparam ContType The type of the sequence containers.
+	* @tparam ValType The numeric data type of the values of the sequence containers.
+	*
+	* @param y_true Input sequence container containing true labels.
+	* @param y_predict Input sequence container containing predicted labels.
+	*
+	* @return Accuracy of `y_predict` wrt. `y_true`.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	double accuracy_score(const ContType<ValType, Alloc>& y_true, const ContType<ValType, Alloc>& y_predict)
+	{
+		size_t size = y_true.size();
+		if (size != y_predict.size())
+			throw std::invalid_argument("Inputs have not the same size.");
+		if (size == 0)
+			throw std::invalid_argument("Inputs have not enough values for accuracy_score.");
+
+		std::vector<bool, std::allocator<bool>> score(size, 0);
+		std::vector<bool, std::allocator<bool>>::iterator score_it = score.begin();
+		auto y_true_it = y_true.begin();
+		auto y_predict_it = y_predict.begin();
+
+		for (; y_true_it != y_true.end(); ++y_true_it, ++y_predict_it, ++score_it)
+			*score_it = (static_cast<int>(*y_true_it) == static_cast<int>(*y_predict_it));
+		auto c = std::count(score.begin(), score.end(), true);
+
+		return static_cast<double>(c) / size;
+	}
+
 	// --- Others --- //
 
 	template<typename ValType>
