@@ -79,6 +79,31 @@ namespace Stats
 	}
 
 	/**
+	* Power mean.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container, containing strictly positive values.
+	* @param exp Exponent.
+	*
+	* @return Power mean of `x`.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	double pmean(const ContType<ValType, Alloc>& x, double exp)
+	{
+		size_t size = x.size();
+		if (size == 0)
+			throw std::invalid_argument("Input has not enough values for pmean.");
+		if (!Maths::is_positive(x))
+			throw std::invalid_argument("Input contains negative value(s).");
+
+		ContType<double, std::allocator<double>> x_pow = Maths::power(x, exp);
+		double sxpow = std::accumulate(x_pow.begin(), x_pow.end(), 0.0);
+		return std::pow(sxpow / size, 1.0 / exp);
+	}
+
+	/**
 	* Variance.
 	*
 	* @tparam ContType The type of the sequence container.

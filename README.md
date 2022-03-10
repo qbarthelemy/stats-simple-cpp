@@ -40,7 +40,8 @@ Others: `set`
 
 #### Stats.hpp
 
-Summary statistics: `mean`, `hmean`, `gmean`, `var`, `std`, `hstd`, `gstd`,
+Summary statistics: `mean`, `hmean`, `gmean`, `pmean`,
+`var`, `std`, `hstd`, `gstd`,
 `skewness`, `kurtosis`,
 `median`, `median_abs_deviation`
 
