@@ -68,7 +68,7 @@ public:
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	ContType<double, std::allocator<double>> predict(const ContType<ValType, Alloc>& x)
+	ContType<double, std::allocator<double>> predict(const ContType<ValType, Alloc>& x) const
 	{
 		auto x_it = x.begin();
 		ContType<double, std::allocator<double>> y(x.size());
@@ -91,7 +91,7 @@ public:
 	* @return R² of `predict(x)` wrt. `y`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double score(const ContType<ValType, Alloc>& x, const ContType<ValType, Alloc>& y)
+	double score(const ContType<ValType, Alloc>& x, const ContType<ValType, Alloc>& y) const
 	{
 		size_t size = x.size();
 		if (size != y.size())

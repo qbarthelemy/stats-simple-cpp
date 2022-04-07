@@ -389,13 +389,11 @@ namespace Stats
 
 		double sxx = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
 		double syy = std::inner_product(y_cent.begin(), y_cent.end(), y_cent.begin(), 0.0);
-		double sxy = std::inner_product(x_cent.begin(), x_cent.end(), y_cent.begin(), 0.0);
-
-		double denom = std::sqrt(sxx) * std::sqrt(syy);
-		if (denom <= 0)
+		if (sxx <= 0 || syy <= 0)
 			return std::numeric_limits<double>::quiet_NaN();
 
-		double r = sxy / denom;
+		double sxy = std::inner_product(x_cent.begin(), x_cent.end(), y_cent.begin(), 0.0);
+		double r = sxy / (std::sqrt(sxx) * std::sqrt(syy));
 		r = max(min(r, 1.0), -1.0);
 		return r;
 	}

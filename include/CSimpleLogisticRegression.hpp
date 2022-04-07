@@ -100,11 +100,11 @@ public:
 	* whose data type is int to provide a binary target value.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	ContType<int, std::allocator<int>> predict(const ContType<ValType, Alloc>& x)
+	ContType<int, std::allocator<int>> predict(const ContType<ValType, Alloc>& x) const
 	{
 		ContType<double, std::allocator<double>> y_lin = Maths::linear(x, get_coeff(), get_intercept());
 		ContType<double, std::allocator<double>> y_sig = Maths::sigmoid(y_lin);
-		
+
 		ContType<int, std::allocator<int>> y(x.size());
 		std::transform(y_sig.begin(), y_sig.end(), y.begin(), [](double e) { return e >= 0.5 ? 1 : 0; });
 
@@ -123,7 +123,7 @@ public:
 	* @return Accuracy of `predict(x)` wrt. `y`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double score(const ContType<ValType, Alloc>& x, const ContType<int, std::allocator<int>>& y)
+	double score(const ContType<ValType, Alloc>& x, const ContType<int, std::allocator<int>>& y) const
 	{
 		ContType<int, std::allocator<int>> y_predict = predict(x);
 		return Stats::accuracy_score(y, y_predict);
