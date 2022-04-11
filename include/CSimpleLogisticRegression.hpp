@@ -20,7 +20,8 @@ public:
 	* @param gradient_threshold Threshold in percentage of convergence of gradient descent.
 	* @param iteration_threshold Threshold on maximal number of iterations for gradient descent.
 	*/
-	SimpleLogisticRegression(double learning_rate = 0.001, double gradient_threshold = 0.01, int iteration_threshold = 100)
+	SimpleLogisticRegression(double learning_rate = 0.001, double gradient_threshold = 0.01,
+		int iteration_threshold = 100)
 	{ 
 		_coeff = 1E42, _intercept = 1E42;
 		_learning_rate = learning_rate;
@@ -28,9 +29,9 @@ public:
 		_iteration_threshold = iteration_threshold;
 	}
 
-	double get_coeff() { return _coeff; }
+	double get_coeff() const { return _coeff; }
 
-	double get_intercept() { return _intercept; }
+	double get_intercept() const { return _intercept; }
 
 	/**
 	* Fit logistic model, using gradient descent on binary-cross entropy.

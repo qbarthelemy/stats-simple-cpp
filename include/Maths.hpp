@@ -100,7 +100,9 @@ namespace Maths
 		if (x.size() == 0)
 			throw std::invalid_argument("Input has not enough values for prod.");
 
-		ContType::value_type x_prod = std::accumulate(x.begin(), x.end(), static_cast<ContType::value_type>(1), std::multiplies<ContType::value_type>());
+		ContType::value_type x_prod = std::accumulate(
+			x.begin(), x.end(), static_cast<ContType::value_type>(1), std::multiplies<ContType::value_type>()
+		);
 		return x_prod;
 	}
 
@@ -140,7 +142,9 @@ namespace Maths
 	ContType absolute(const ContType& x)
 	{
 		ContType x_abs(x.size());
-		std::transform(x.begin(), x.end(), x_abs.begin(), static_cast<ContType::value_type(*)(ContType::value_type)>(&std::abs));
+		std::transform(
+			x.begin(), x.end(), x_abs.begin(), static_cast<ContType::value_type(*)(ContType::value_type)>(&std::abs)
+		);
 		return x_abs;
 	}
 

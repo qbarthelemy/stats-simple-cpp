@@ -19,9 +19,9 @@ public:
 	*/
 	SimpleLinearRegression() { _coeff = 1E42, _intercept = 1E42; }
 
-	double get_coeff() { return _coeff; }
+	double get_coeff() const { return _coeff; }
 
-	double get_intercept() { return _intercept; }
+	double get_intercept() const { return _intercept; }
 
 	/**
 	* Fit linear model, using ordinary least squares.
