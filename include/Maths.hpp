@@ -268,10 +268,10 @@ namespace Maths
 		ContType x_set = { x.front() };
 
 		bool is_in_set = false;
-		for (auto _x : x)
+		for (const auto _x : x)
 		{
 			is_in_set = false;
-			for (auto _s : x_set)
+			for (const auto _s : x_set)
 				if (std::fabs(static_cast<double>(_s) - static_cast<double>(_x)) < epsilon)
 					is_in_set = true;
 			if (!is_in_set)
