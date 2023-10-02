@@ -20,8 +20,11 @@ public:
 	* @param gradient_threshold Threshold in percentage of convergence of gradient descent.
 	* @param iteration_threshold Threshold on maximal number of iterations for gradient descent.
 	*/
-	SimpleLogisticRegression(double learning_rate = 0.001, double gradient_threshold = 0.01,
-		int iteration_threshold = 100)
+	SimpleLogisticRegression(
+		double learning_rate = 0.001,
+		double gradient_threshold = 0.01,
+		int iteration_threshold = 100
+	)
 	{ 
 		_coeff = 1E42, _intercept = 1E42;
 		_learning_rate = learning_rate;
@@ -85,8 +88,6 @@ public:
 		while ((std::fabs(d_coeff / _coeff) > _gradient_threshold
 			&& std::fabs(d_intercept / _intercept) > _gradient_threshold)
 			|| iteration_count < _iteration_threshold);
-
-		return;
 	}
 
 	/**

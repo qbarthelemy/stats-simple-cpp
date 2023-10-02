@@ -52,8 +52,6 @@ public:
 		else
 			_coeff = std::numeric_limits<double>::quiet_NaN();
 		_intercept = (sy - _coeff * sx) / size;
-
-		return;
 	}
 
 	/**
