@@ -252,7 +252,7 @@ namespace Stats
 		if (size == 0)
 			throw std::invalid_argument("Input has not enough values for median.");
 
-		std::vector<ContType::value_type> x_sort(x.begin(), x.end());
+		std::vector<typename ContType::value_type> x_sort(x.begin(), x.end());
 		std::sort(x_sort.begin(), x_sort.end());
 
 		double med;
