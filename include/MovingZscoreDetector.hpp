@@ -1,3 +1,4 @@
+#pragma once
 #include <stdexcept>
 #include <algorithm>
 
@@ -18,7 +19,7 @@ public:
 	* Create moving z-score detector.
 	*
 	* @param zscore_threshold Z-score threshold to detect anomaly.
-	* @param sample_init Number of values used for initialization. No detection during initialization. 
+	* @param sample_init Number of values used for initialization. No detection during initialization.
 	* @param var_min Minimal value for variance, strictly positive.
 	* @param diff_min Minimal value for difference x - mean, positive. Avoid spurious detections on small raw differences.
 	*/
@@ -92,7 +93,7 @@ public:
 			_var = (1.0 - update_factor) * _var + update_factor * (x - _mean) * (x - _mean);
 
 			// allow a safe use of std::sqrt() in the following
-			_var = max(_var, _var_min);
+			_var = std::max(_var, _var_min);
 		}
 	}
 
@@ -114,7 +115,7 @@ public:
 		// zscore thresholding: (x - mean) / std = z > z_th => x - mean > z_th * sqrt(var)
 		double threshold = _zscore_threshold * std::sqrt(_var);
 		// set a minimal value for threshold applied on x - mean
-		threshold = max(threshold, _diff_min);
+		threshold = std::max(threshold, _diff_min);
 
 		if (x - _mean > threshold)
 			return 1;

@@ -79,9 +79,9 @@ namespace Maths
 	* @return Boolean checking if all values of `x` are strictly positive.
 	*/
 	template<typename ContType>
-	bool is_positive(const ContType& x)
+	bool is_positive(const ContType &x)
 	{
-		bool check = std::all_of(x.begin(), x.end(), [](const ContType::value_type& e) { return e > 0; });
+		bool check = std::all_of(x.begin(), x.end(), [](const ContType::value_type &e) { return e > 0; });
 		return check;
 	}
 
@@ -97,7 +97,7 @@ namespace Maths
 	* @return Product of values of `x`, whose data type is the same as `x`.
 	*/
 	template<typename ContType>
-	typename ContType::value_type prod(const ContType& x)
+	typename ContType::value_type prod(const ContType &x)
 	{
 		if (x.size() == 0)
 			throw std::invalid_argument("Input has not enough values for prod.");
@@ -124,10 +124,10 @@ namespace Maths
 	* ie `y = a * x + b`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	ContType<double, std::allocator<double>> linear(const ContType<ValType, Alloc>& x, double a, double b)
+	ContType<double, std::allocator<double>> linear(const ContType<ValType, Alloc> &x, double a, double b)
 	{
 		ContType<double, std::allocator<double>> y(x.size());
-		std::transform(x.begin(), x.end(), y.begin(), [a, b](const double& e) { return a * e + b; });
+		std::transform(x.begin(), x.end(), y.begin(), [a, b](const double &e) { return a * e + b; });
 		return y;
 	}
 
@@ -141,7 +141,7 @@ namespace Maths
 	* @return Output sequence container containing the element-wise absolute value of `x`.
 	*/
 	template<typename ContType>
-	ContType absolute(const ContType& x)
+	ContType absolute(const ContType &x)
 	{
 		ContType x_abs(x.size());
 		std::transform(
@@ -162,13 +162,13 @@ namespace Maths
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> reciprocal(const ContType<ValType, Alloc>& x)
+	typename ContType<double, std::allocator<double>> reciprocal(const ContType<ValType, Alloc> &x)
 	{
 		if (std::find(x.begin(), x.end(), static_cast<ValType>(0)) != x.end())
 			throw std::invalid_argument("Input contains zero value(s).");
 
 		ContType<double, std::allocator<double>> x_inv(x.size());
-		std::transform(x.begin(), x.end(), x_inv.begin(), [](const ValType& e) { return 1.0 / e; });
+		std::transform(x.begin(), x.end(), x_inv.begin(), [](const ValType &e) { return 1.0 / e; });
 		return x_inv;
 	}
 
@@ -185,10 +185,10 @@ namespace Maths
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> power(const ContType<ValType, Alloc>& x, double exp)
+	typename ContType<double, std::allocator<double>> power(const ContType<ValType, Alloc> &x, double exp)
 	{
 		ContType<double, std::allocator<double>> x_pow(x.size());
-		std::transform(x.begin(), x.end(), x_pow.begin(), [exp](const double& e) { return std::pow(e, exp); });
+		std::transform(x.begin(), x.end(), x_pow.begin(), [exp](const double &e) { return std::pow(e, exp); });
 		return x_pow;
 	}
 
@@ -204,13 +204,13 @@ namespace Maths
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> log(const ContType<ValType, Alloc>& x)
+	typename ContType<double, std::allocator<double>> log(const ContType<ValType, Alloc> &x)
 	{
 		if (!Maths::is_positive(x))
 			throw std::invalid_argument("Input contains negative value(s).");
 
 		ContType<double, std::allocator<double>> x_log(x.size());
-		std::transform(x.begin(), x.end(), x_log.begin(), [](const ValType& e) { return std::log(e); });
+		std::transform(x.begin(), x.end(), x_log.begin(), [](const ValType &e) { return std::log(e); });
 		return x_log;
 	}
 
@@ -226,10 +226,10 @@ namespace Maths
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> exp(const ContType<ValType, Alloc>& x)
+	typename ContType<double, std::allocator<double>> exp(const ContType<ValType, Alloc> &x)
 	{
 		ContType<double, std::allocator<double>> x_exp(x.size());
-		std::transform(x.begin(), x.end(), x_exp.begin(), [](const ValType& e) { return std::exp(e); });
+		std::transform(x.begin(), x.end(), x_exp.begin(), [](const ValType &e) { return std::exp(e); });
 		return x_exp;
 	}
 
@@ -245,10 +245,10 @@ namespace Maths
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> sigmoid(const ContType<ValType, Alloc>& x)
+	typename ContType<double, std::allocator<double>> sigmoid(const ContType<ValType, Alloc> &x)
 	{
 		ContType<double, std::allocator<double>> x_sig(x.size());
-		std::transform(x.begin(), x.end(), x_sig.begin(), [](const ValType& e) { return 1.0 / (1.0 + std::exp(-e)); });
+		std::transform(x.begin(), x.end(), x_sig.begin(), [](const ValType &e) { return 1.0 / (1.0 + std::exp(-e)); });
 		return x_sig;
 	}
 
@@ -265,7 +265,7 @@ namespace Maths
 	* @return Output sequence container containing distinct/non-repeating elements of `x`.
 	*/
 	template<typename ContType>
-	typename ContType set(const ContType& x, double epsilon = 1e-6)
+	typename ContType set(const ContType &x, double epsilon = 1e-6)
 	{
 		ContType x_set = { x.front() };
 

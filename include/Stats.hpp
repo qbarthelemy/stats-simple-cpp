@@ -26,7 +26,7 @@ namespace Stats
 	* @return Arithmetic mean of `x`.
 	*/
 	template<typename ContType>
-	double mean(const ContType& x)
+	double mean(const ContType &x)
 	{
 		size_t size = x.size();
 		if (size == 0)
@@ -47,7 +47,7 @@ namespace Stats
 	* @return Harmonic mean of `x`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double hmean(const ContType<ValType, Alloc>& x)
+	double hmean(const ContType<ValType, Alloc> &x)
 	{
 		size_t size = x.size();
 		if (size == 0)
@@ -68,7 +68,7 @@ namespace Stats
 	* @return Geometric mean of `x`.
 	*/
 	template<typename ContType>
-	double gmean(const ContType& x)
+	double gmean(const ContType &x)
 	{
 		size_t size = x.size();
 		if (size == 0)
@@ -91,7 +91,7 @@ namespace Stats
 	* @return Power mean of `x`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double pmean(const ContType<ValType, Alloc>& x, double exp)
+	double pmean(const ContType<ValType, Alloc> &x, double exp)
 	{
 		size_t size = x.size();
 		if (size == 0)
@@ -116,7 +116,7 @@ namespace Stats
 	* @return Variance of `x`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double var(const ContType<ValType, Alloc>& x, size_t ddof = 0)
+	double var(const ContType<ValType, Alloc> &x, size_t ddof = 0)
 	{
 		size_t size = x.size();
 		if (size <= 1)
@@ -140,7 +140,7 @@ namespace Stats
 	* @return Standard deviation of `x`.
 	*/
 	template<typename ContType>
-	double std(const ContType& x, size_t ddof = 0)
+	double std(const ContType &x, size_t ddof = 0)
 	{
 		return std::sqrt(Stats::var(x, ddof));
 	}
@@ -157,7 +157,7 @@ namespace Stats
 	* @return Harmonic standard deviation of `x`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double hstd(const ContType<ValType, Alloc>& x, size_t ddof = 0)
+	double hstd(const ContType<ValType, Alloc> &x, size_t ddof = 0)
 	{
 		ContType<double, std::allocator<double>> x_inv = Maths::reciprocal(x);
 		return 1.0 / Stats::std(x_inv, ddof);
@@ -175,7 +175,7 @@ namespace Stats
 	* @return Geometric standard deviation of `x`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double gstd(const ContType<ValType, Alloc>& x, size_t ddof = 0)
+	double gstd(const ContType<ValType, Alloc> &x, size_t ddof = 0)
 	{
 		ContType<double, std::allocator<double>> x_log = Maths::log(x);
 		return std::exp(Stats::std(x_log, ddof));
@@ -192,7 +192,7 @@ namespace Stats
 	* @return Skewness of `x`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double skewness(const ContType<ValType, Alloc>& x)
+	double skewness(const ContType<ValType, Alloc> &x)
 	{
 		size_t size = x.size();
 		if (size <= 1)
@@ -219,7 +219,7 @@ namespace Stats
 	* @return Non-normalized kurtosis of `x`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double kurtosis(const ContType<ValType, Alloc>& x)
+	double kurtosis(const ContType<ValType, Alloc> &x)
 	{
 		size_t size = x.size();
 		if (size <= 1)
@@ -247,7 +247,7 @@ namespace Stats
 	* @return Median of `x`.
 	*/
 	template<typename ContType>
-	double median(const ContType& x)
+	double median(const ContType &x)
 	{
 		size_t size = x.size();
 		if (size == 0)
@@ -277,7 +277,7 @@ namespace Stats
 	* @return Median absolute deviation of `x`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double median_abs_deviation(const ContType<ValType, Alloc>& x, bool is_rescaled = false)
+	double median_abs_deviation(const ContType<ValType, Alloc> &x, bool is_rescaled = false)
 	{
 		double med = Stats::median(x);
 
@@ -305,7 +305,7 @@ namespace Stats
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> center(const ContType<ValType, Alloc>& x)
+	typename ContType<double, std::allocator<double>> center(const ContType<ValType, Alloc> &x)
 	{
 		double mean = Stats::mean(x);
 
@@ -327,7 +327,7 @@ namespace Stats
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> zscore(const ContType<ValType, Alloc>& x, size_t ddof = 0)
+	typename ContType<double, std::allocator<double>> zscore(const ContType<ValType, Alloc> &x, size_t ddof = 0)
 	{
 		size_t size = x.size();
 		if (size <= 1)
@@ -357,7 +357,7 @@ namespace Stats
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> gzscore(const ContType<ValType, Alloc>& x, size_t ddof = 0)
+	typename ContType<double, std::allocator<double>> gzscore(const ContType<ValType, Alloc> &x, size_t ddof = 0)
 	{
 		ContType<double, std::allocator<double>> x_log = Maths::log(x);
 		ContType<double, std::allocator<double>> gz = Stats::zscore(x_log, ddof);
@@ -377,7 +377,7 @@ namespace Stats
 	* @return Pearson product-moment correlation coefficient of `x` and `y`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double pearsonr(const ContType<ValType, Alloc>& x, const ContType<ValType, Alloc>& y)
+	double pearsonr(const ContType<ValType, Alloc> &x, const ContType<ValType, Alloc> &y)
 	{
 		size_t size = x.size();
 		if (size != y.size())
@@ -395,7 +395,7 @@ namespace Stats
 
 		double sxy = std::inner_product(x_cent.begin(), x_cent.end(), y_cent.begin(), 0.0);
 		double r = sxy / (std::sqrt(sxx) * std::sqrt(syy));
-		r = max(min(r, 1.0), -1.0);
+		r = std::max(std::min(r, 1.0), -1.0);
 		return r;
 	}
 
@@ -410,7 +410,7 @@ namespace Stats
 	* @return Spearman rank-order correlation coefficient of `x` and `y`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double spearmanr(const ContType<ValType, Alloc>& x, const ContType<ValType, Alloc>& y)
+	double spearmanr(const ContType<ValType, Alloc> &x, const ContType<ValType, Alloc> &y)
 	{
 		size_t size = x.size();
 		if (size != y.size())
@@ -438,7 +438,7 @@ namespace Stats
 	* @return Accuracy of `y_predict` wrt. `y_true`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double accuracy_score(const ContType<ValType, Alloc>& y_true, const ContType<ValType, Alloc>& y_predict)
+	double accuracy_score(const ContType<ValType, Alloc> &y_true, const ContType<ValType, Alloc> &y_predict)
 	{
 		size_t size = y_true.size();
 		if (size != y_predict.size())
@@ -461,13 +461,13 @@ namespace Stats
 	// --- Others --- //
 
 	template<typename ValType>
-	bool op_sort_increase(const std::pair<ValType, unsigned int>& x1, const std::pair<ValType, unsigned int>& x2)
+	bool op_sort_increase(const std::pair<ValType, unsigned int> &x1, const std::pair<ValType, unsigned int> &x2)
 	{
 		return x1.first < x2.first;
 	}
 
 	template<typename ValType>
-	bool op_sort_decrease(const std::pair<ValType, unsigned int>& x1, const std::pair<ValType, unsigned int>& x2)
+	bool op_sort_decrease(const std::pair<ValType, unsigned int> &x1, const std::pair<ValType, unsigned int> &x2)
 	{
 		return x1.first > x2.first;
 	}
@@ -483,7 +483,7 @@ namespace Stats
 	* @return Output sequence container containing increasing ranks of values of `x`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<unsigned int, std::allocator<unsigned int>> rankdata(const ContType<ValType, Alloc>& x)
+	typename ContType<unsigned int, std::allocator<unsigned int>> rankdata(const ContType<ValType, Alloc> &x)
 	{
 		size_t size = x.size(), i = 0;
 

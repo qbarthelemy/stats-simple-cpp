@@ -1,3 +1,4 @@
+#pragma once
 #include <stdexcept>
 #include <limits>
 #include <numeric>
@@ -33,7 +34,7 @@ public:
 	* @param y Input sequence container containing target values.
 	*/
 	template<typename ContType>
-	void fit(const ContType& x, const ContType& y)
+	void fit(const ContType &x, const ContType &y)
 	{
 		size_t size = x.size();
 		if (size != y.size())
@@ -67,7 +68,7 @@ public:
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	ContType<double, std::allocator<double>> predict(const ContType<ValType, Alloc>& x) const
+	ContType<double, std::allocator<double>> predict(const ContType<ValType, Alloc> &x) const
 	{
 		auto x_it = x.begin();
 		ContType<double, std::allocator<double>> y(x.size());
@@ -90,7 +91,7 @@ public:
 	* @return R^2 of `predict(x)` wrt. `y`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double score(const ContType<ValType, Alloc>& x, const ContType<ValType, Alloc>& y) const
+	double score(const ContType<ValType, Alloc> &x, const ContType<ValType, Alloc> &y) const
 	{
 		size_t size = x.size();
 		if (size != y.size())

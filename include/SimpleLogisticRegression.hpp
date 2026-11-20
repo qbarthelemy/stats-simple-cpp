@@ -1,3 +1,4 @@
+#pragma once
 #include <stdexcept>
 #include <numeric>
 #include <algorithm>
@@ -25,7 +26,7 @@ public:
 		double gradient_threshold = 0.01,
 		int iteration_threshold = 100
 	)
-	{ 
+	{
 		_coeff = 1E42, _intercept = 1E42;
 		_learning_rate = learning_rate;
 		_gradient_threshold = gradient_threshold;
@@ -46,11 +47,11 @@ public:
 	* @param y Input sequence container containing binary target values.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	void fit(const ContType<ValType, Alloc>& x, const ContType<int, std::allocator<int>>& y)
+	void fit(const ContType<ValType, Alloc> &x, const ContType<int, std::allocator<int>> &y)
 	{
 		if (_learning_rate <= 0)
 			throw std::invalid_argument("Parameter learning_rate must be positive.");
-		if (_gradient_threshold <= 0 || _gradient_threshold >=1)
+		if (_gradient_threshold <= 0 || _gradient_threshold >= 1)
 			throw std::invalid_argument("Parameter gradient_threshold must be a percentage in (0, 1).");
 		if (_iteration_threshold <= 0)
 			throw std::invalid_argument("Parameter iteration_threshold must be positive.");
@@ -84,8 +85,7 @@ public:
 			_intercept -= _learning_rate * d_intercept;
 
 			iteration_count++;
-		}
-		while ((std::fabs(d_coeff / _coeff) > _gradient_threshold
+		} while ((std::fabs(d_coeff / _coeff) > _gradient_threshold
 			&& std::fabs(d_intercept / _intercept) > _gradient_threshold)
 			|| iteration_count < _iteration_threshold);
 	}
@@ -102,7 +102,7 @@ public:
 	* whose data type is int to provide a binary target value.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	ContType<int, std::allocator<int>> predict(const ContType<ValType, Alloc>& x) const
+	ContType<int, std::allocator<int>> predict(const ContType<ValType, Alloc> &x) const
 	{
 		ContType<double, std::allocator<double>> y_lin = Maths::linear(x, get_coeff(), get_intercept());
 		ContType<double, std::allocator<double>> y_sig = Maths::sigmoid(y_lin);
@@ -125,7 +125,7 @@ public:
 	* @return Accuracy of `predict(x)` wrt. `y`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double score(const ContType<ValType, Alloc>& x, const ContType<int, std::allocator<int>>& y) const
+	double score(const ContType<ValType, Alloc> &x, const ContType<int, std::allocator<int>> &y) const
 	{
 		ContType<int, std::allocator<int>> y_predict = predict(x);
 		return Stats::accuracy_score(y, y_predict);
