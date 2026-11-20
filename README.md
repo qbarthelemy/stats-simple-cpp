@@ -1,7 +1,7 @@
 # stats-simple-cpp
 
 [![Code CppVersion](https://img.shields.io/badge/C++-11+-blue)](https://img.shields.io/badge/C++-11+-blue)
-[![License](https://img.shields.io/badge/licence-BSD--3--Clause-green)](https://img.shields.io/badge/license-BSD--3--Clause-green)
+[![License](https://img.shields.io/badge/license-BSD--3--Clause-green)](https://img.shields.io/badge/license-BSD--3--Clause-green)
 
 Library of statistical functions and classes in simple C++,
 compatible for different sequence containers of different numeric data types.
@@ -53,20 +53,25 @@ Metrics: `accuracy_score`
 
 Others: `rankdata`
 
-#### CSimpleLinearRegression.hpp
+#### SimpleLinearRegression.hpp
 
 Class `SimpleLinearRegression`,
 with `fit`, `predict`, and `score` (coefficient of determination R²).
 
-#### CSimpleLogisticRegression.hpp
+#### SimpleLogisticRegression.hpp
 
 Class `SimpleLogisticRegression` for binary classification,
 with `fit`, `predict`, and `score` (accuracy).
 
+#### MovingZscoreDetector.hpp
+
+Class `MovingZscoreDetector` for online anomaly detection with a moving z-score,
+with `partial_fit`, and `detect`.
+
 ## Example
 
 ```
-#include "CSimpleLinearRegression.hpp"
+#include "SimpleLinearRegression.hpp"
 #include <list>
 
 int main()

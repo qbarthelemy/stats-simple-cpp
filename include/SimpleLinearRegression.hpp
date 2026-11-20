@@ -2,6 +2,7 @@
 #include <limits>
 #include <numeric>
 #include <algorithm>
+#include <functional>
 #include <vector>
 
 
@@ -86,7 +87,7 @@ public:
 	* @param x Input sequence container containing test values.
 	* @param y Input sequence container containing true predictions.
 	*
-	* @return R² of `predict(x)` wrt. `y`.
+	* @return R^2 of `predict(x)` wrt. `y`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double score(const ContType<ValType, Alloc>& x, const ContType<ValType, Alloc>& y) const
@@ -106,8 +107,10 @@ public:
 		double sy = std::accumulate(y.begin(), y.end(), 0.0);
 		double syy = std::inner_product(y.begin(), y.end(), y.begin(), 0.0);
 		double sstot = syy - sy * sy / size;
-		double r2 = 1.0 - ssres / sstot;
+		if (sstot <= 0.0)
+			return -1.0;
 
+		double r2 = 1.0 - ssres / sstot;
 		return r2;
 	}
 

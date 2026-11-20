@@ -1,5 +1,7 @@
+#pragma once
 #include <stdexcept>
 #include <cmath>
+#include <memory>
 #include <numeric>
 #include <functional>
 #include <algorithm>
