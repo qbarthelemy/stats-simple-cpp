@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{5B1E7C3A-92D4-4F68-8A0B-3C6D1E9F2A74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests">
+      <UniqueIdentifier>{A27D4E90-6C18-4B35-9F52-7E0A8B1D3C46}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Maths.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MovingZscoreDetector.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SimpleLinearRegression.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SimpleLogisticRegression.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Stats.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\stats-simple-cpp.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="umbrella.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\MathsTest.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\MovingZscoreDetectorTest.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\SimpleLinearRegressionTest.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\SimpleLogisticRegressionTest.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\StatsTest.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

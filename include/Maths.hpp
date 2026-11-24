@@ -12,7 +12,6 @@
 */
 namespace Maths
 {
-
 	// --- Integer input functions --- //
 
 	/**

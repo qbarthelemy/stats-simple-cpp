@@ -201,7 +201,7 @@ namespace Stats
 		ContType<double, std::allocator<double>> x_cent = Stats::center(x);
 		double sx2 = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
 
-		ContType<double, std::allocator<double>> x_cent_3 = Maths::pow(x_cent, 3.0);
+		ContType<double, std::allocator<double>> x_cent_3 = Maths::power(x_cent, 3.0);
 		double sx3 = std::accumulate(x_cent_3.begin(), x_cent_3.end(), 0.0);
 
 		double skew = (sx3 * std::pow(size, 0.5)) / std::pow(sx2, 1.5);
@@ -228,7 +228,7 @@ namespace Stats
 		ContType<double, std::allocator<double>> x_cent = Stats::center(x);
 		double sx2 = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
 
-		ContType<double, std::allocator<double>> x_cent_4 = Maths::pow(x_cent, 4.0);
+		ContType<double, std::allocator<double>> x_cent_4 = Maths::power(x_cent, 4.0);
 		double sx4 = std::accumulate(x_cent_4.begin(), x_cent_4.end(), 0.0);
 
 		double kurt = (sx4 * size) / (sx2 * sx2);
