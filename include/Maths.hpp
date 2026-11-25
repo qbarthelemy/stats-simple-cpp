@@ -1,10 +1,12 @@
 #pragma once
 #include <stdexcept>
 #include <cmath>
+#include <vector>
 #include <memory>
 #include <numeric>
 #include <functional>
 #include <algorithm>
+#include <utility>
 
 
 /**
@@ -26,8 +28,10 @@ namespace Maths
 	template<typename ValType>
 	ValType gcd(ValType m, ValType n)
 	{
-		m = std::abs(m);
-		n = std::abs(n);
+		if (m < 0)
+			throw std::invalid_argument("First input must be non-negative.");
+		if (n < 0)
+			throw std::invalid_argument("Second input must be non-negative.");
 
 		ValType t;
 		if (m > n) // ensure n > m
@@ -58,7 +62,8 @@ namespace Maths
 	template<typename ValType>
 	ValType factorial(ValType n)
 	{
-		n = std::abs(n);
+		if (n < 0)
+			throw std::invalid_argument("Input must be non-negative.");
 
 		ValType fact = 1;
 		for (ValType c = 1; c <= n; ++c)
@@ -80,7 +85,7 @@ namespace Maths
 	template<typename ContType>
 	bool is_positive(const ContType &x)
 	{
-		bool check = std::all_of(x.begin(), x.end(), [](const ContType::value_type &e) { return e > 0; });
+		bool check = std::all_of(x.begin(), x.end(), [](const typename ContType::value_type &e) { return e > 0; });
 		return check;
 	}
 
@@ -101,8 +106,9 @@ namespace Maths
 		if (x.size() == 0)
 			throw std::invalid_argument("Input has not enough values for prod.");
 
-		ContType::value_type x_prod = std::accumulate(
-			x.begin(), x.end(), static_cast<ContType::value_type>(1), std::multiplies<ContType::value_type>()
+		typename ContType::value_type x_prod = std::accumulate(
+			x.begin(), x.end(), static_cast<typename ContType::value_type>(1),
+			std::multiplies<typename ContType::value_type>()
 		);
 		return x_prod;
 	}
@@ -126,7 +132,10 @@ namespace Maths
 	ContType<double, std::allocator<double>> linear(const ContType<ValType, Alloc> &x, double a, double b)
 	{
 		ContType<double, std::allocator<double>> y(x.size());
-		std::transform(x.begin(), x.end(), y.begin(), [a, b](const double &e) { return a * e + b; });
+		std::transform(
+			x.begin(), x.end(), y.begin(),
+			[a, b](const double &e) { return a * e + b; }
+		);
 		return y;
 	}
 
@@ -142,11 +151,12 @@ namespace Maths
 	template<typename ContType>
 	ContType absolute(const ContType &x)
 	{
-		ContType x_abs(x.size());
+		ContType x_new(x.size());
 		std::transform(
-			x.begin(), x.end(), x_abs.begin(), static_cast<ContType::value_type(*)(ContType::value_type)>(&std::abs)
+			x.begin(), x.end(), x_new.begin(),
+			static_cast<typename ContType::value_type(*)(typename ContType::value_type)>(&std::abs)
 		);
-		return x_abs;
+		return x_new;
 	}
 
 	/**
@@ -161,14 +171,17 @@ namespace Maths
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> reciprocal(const ContType<ValType, Alloc> &x)
+	ContType<double, std::allocator<double>> reciprocal(const ContType<ValType, Alloc> &x)
 	{
 		if (std::find(x.begin(), x.end(), static_cast<ValType>(0)) != x.end())
 			throw std::invalid_argument("Input contains zero value(s).");
 
-		ContType<double, std::allocator<double>> x_inv(x.size());
-		std::transform(x.begin(), x.end(), x_inv.begin(), [](const ValType &e) { return 1.0 / e; });
-		return x_inv;
+		ContType<double, std::allocator<double>> x_new(x.size());
+		std::transform(
+			x.begin(), x.end(), x_new.begin(),
+			[](const double &e) { return 1.0 / e; }
+		);
+		return x_new;
 	}
 
 	/**
@@ -184,11 +197,14 @@ namespace Maths
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> power(const ContType<ValType, Alloc> &x, double exp)
+	ContType<double, std::allocator<double>> power(const ContType<ValType, Alloc> &x, double exp)
 	{
-		ContType<double, std::allocator<double>> x_pow(x.size());
-		std::transform(x.begin(), x.end(), x_pow.begin(), [exp](const double &e) { return std::pow(e, exp); });
-		return x_pow;
+		ContType<double, std::allocator<double>> x_new(x.size());
+		std::transform(
+			x.begin(), x.end(), x_new.begin(),
+			[exp](const double &e) { return std::pow(e, exp); }
+		);
+		return x_new;
 	}
 
 	/**
@@ -203,14 +219,17 @@ namespace Maths
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> log(const ContType<ValType, Alloc> &x)
+	ContType<double, std::allocator<double>> log(const ContType<ValType, Alloc> &x)
 	{
 		if (!Maths::is_positive(x))
-			throw std::invalid_argument("Input contains negative value(s).");
+			throw std::invalid_argument("Input must contain strictly positive value(s).");
 
-		ContType<double, std::allocator<double>> x_log(x.size());
-		std::transform(x.begin(), x.end(), x_log.begin(), [](const ValType &e) { return std::log(e); });
-		return x_log;
+		ContType<double, std::allocator<double>> x_new(x.size());
+		std::transform(
+			x.begin(), x.end(), x_new.begin(),
+			[](const double &e) { return std::log(e); }
+		);
+		return x_new;
 	}
 
 	/**
@@ -225,11 +244,14 @@ namespace Maths
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> exp(const ContType<ValType, Alloc> &x)
+	ContType<double, std::allocator<double>> exp(const ContType<ValType, Alloc> &x)
 	{
-		ContType<double, std::allocator<double>> x_exp(x.size());
-		std::transform(x.begin(), x.end(), x_exp.begin(), [](const ValType &e) { return std::exp(e); });
-		return x_exp;
+		ContType<double, std::allocator<double>> x_new(x.size());
+		std::transform(
+			x.begin(), x.end(), x_new.begin(),
+			[](const double &e) { return std::exp(e); }
+		);
+		return x_new;
 	}
 
 	/**
@@ -244,11 +266,14 @@ namespace Maths
 	* whose data type is double to keep the maximum of numerical precision.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	typename ContType<double, std::allocator<double>> sigmoid(const ContType<ValType, Alloc> &x)
+	ContType<double, std::allocator<double>> sigmoid(const ContType<ValType, Alloc> &x)
 	{
-		ContType<double, std::allocator<double>> x_sig(x.size());
-		std::transform(x.begin(), x.end(), x_sig.begin(), [](const ValType &e) { return 1.0 / (1.0 + std::exp(-e)); });
-		return x_sig;
+		ContType<double, std::allocator<double>> x_new(x.size());
+		std::transform(
+			x.begin(), x.end(), x_new.begin(),
+			[](const double &e) { return 1.0 / (1.0 + std::exp(-e)); }
+		);
+		return x_new;
 	}
 
 	// --- Others --- //
@@ -264,7 +289,7 @@ namespace Maths
 	* @return Output sequence container containing distinct/non-repeating elements of `x`.
 	*/
 	template<typename ContType>
-	typename ContType set(const ContType &x, double epsilon = 1e-6)
+	ContType set(const ContType &x, double epsilon = 1e-6)
 	{
 		ContType x_set = { x.front() };
 
@@ -282,4 +307,46 @@ namespace Maths
 		return x_set;
 	}
 
+	template<typename ValType>
+	bool op_sort_increase(const std::pair<ValType, unsigned int> &x1, const std::pair<ValType, unsigned int> &x2)
+	{
+		return x1.first < x2.first;
+	}
+
+	template<typename ValType>
+	bool op_sort_decrease(const std::pair<ValType, unsigned int> &x1, const std::pair<ValType, unsigned int> &x2)
+	{
+		return x1.first > x2.first;
+	}
+
+	/**
+	* Assign ranks to data.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Output sequence container containing increasing ranks of values of `x`.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	ContType<unsigned int, std::allocator<unsigned int>> rankdata(const ContType<ValType, Alloc> &x)
+	{
+		size_t size = x.size(), i = 0;
+
+		auto x_it = x.begin();
+		std::vector<std::pair<ValType, unsigned int>> xr(size);
+		typename std::vector<std::pair<ValType, unsigned int>>::iterator xr_it = xr.begin();
+		for (i = 0; x_it != x.end() && xr_it != xr.end(); ++i, ++x_it, ++xr_it)
+			*xr_it = std::make_pair(*x_it, static_cast<unsigned int>(i));
+
+		std::sort(xr.begin(), xr.end(), Maths::op_sort_increase<ValType>);
+
+		ContType<unsigned int, std::allocator<unsigned int>> ranks(size);
+		typename ContType<unsigned int, std::allocator<unsigned int>>::iterator r_it = ranks.begin();
+		for (xr_it = xr.begin(); xr_it != xr.end() && r_it != ranks.end(); ++xr_it, ++r_it)
+			*r_it = (*xr_it).second;
+
+		return ranks;
+	}
 }

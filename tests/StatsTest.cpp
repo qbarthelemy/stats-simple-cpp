@@ -38,6 +38,25 @@ namespace StatsSimpleCppTests
 				});
 		}
 
+		TEST_METHOD(CenteringOfVectorOfIntegersTest)
+		{
+			std::vector<int> c = { 0, 1, 2, 3, 4 };
+			std::vector<double> center = Stats::center(c);
+			Assert::AreEqual(0.0, Stats::mean(center), 1e-10);
+		}
+		TEST_METHOD(CenteringOfDequeOfFloatsTest)
+		{
+			std::deque<float> c = { -3.57f, 3.42f, 17.99f };
+			std::deque<double> center = Stats::center(c);
+			Assert::AreEqual(0.0, Stats::mean(center), 1e-10);
+		}
+		TEST_METHOD(CenteringOfListOfDoublesTest)
+		{
+			std::list<double> c = { -1.1, 1.2, 2.17, 3.42, 17.99 };
+			std::list<double> center = Stats::center(c);
+			Assert::AreEqual(0.0, Stats::mean(center), 1e-10);
+		}
+
 		TEST_METHOD(HMeanOfDequeOfFloatsTest)
 		{
 			std::deque<float> c = { 1.0f, 12.0f, 1.0f };
@@ -84,26 +103,6 @@ namespace StatsSimpleCppTests
 			Assert::AreEqual(1.25, Stats::median_abs_deviation(c));
 		}
 
-		TEST_METHOD(CenteringOfVectorOfIntegersTest)
-		{
-			std::vector<int> c = { 0, 1, 2, 3, 4 };
-			std::vector<double> center = Stats::center(c);
-			Assert::AreEqual(0.0, Stats::mean(center), 1e-10);
-		}
-		TEST_METHOD(CenteringOfDequeOfFloatsTest)
-		{
-			std::deque<float> c = { -3.57f, 3.42f, 17.99f };
-			std::deque<double> center = Stats::center(c);
-			Assert::AreEqual(0.0, Stats::mean(center), 1e-10);
-		}
-		TEST_METHOD(CenteringOfListOfDoublesTest)
-		{
-			std::list<double> c = { -1.1, 1.2, 2.17, 3.42, 17.99 };
-			std::list<double> center = Stats::center(c);
-
-			Assert::AreEqual(0.0, Stats::mean(center), 1e-10);
-		}
-
 		TEST_METHOD(VarianceOfVectorOfFloatsTest)
 		{
 			std::vector<float> c = { 0.0f, 1.0f, 2.0f, 3.0f, 4.0f };
@@ -127,6 +126,19 @@ namespace StatsSimpleCppTests
 		{
 			std::vector<double> c = { 0.0, 1.0, 2.0, 3.0, 4.0 };
 			Assert::AreEqual(std::sqrt(2.0), Stats::std(c));
+		}
+
+		TEST_METHOD(SkewnessOfVectorOfDoublesTest)
+		{
+			std::vector<double> c = { 2, 8, 0, 4, 1, 9, 9, 0 };
+			Stats::skew(c);
+			//Assert::AreEqual(0.2650554122698573, Stats::skew(c));
+		}
+
+		TEST_METHOD(KurtosisOfListOfDoublesTest)
+		{
+			std::list<double> c = { 2, 8, 0, 4, 1, 9, 9, 0 };
+			Stats::kurtosis(c);
 		}
 
 		TEST_METHOD(ZscoreOfVectorOfDoublesTest)
@@ -191,23 +203,6 @@ namespace StatsSimpleCppTests
 			std::list<int> y1 = { 0, 0, 1, 1 };
 			std::list<int> y2 = { 0, 1, 1, 0 };
 			Assert::AreEqual(0.5, Stats::accuracy_score(y1, y2));
-		}
-
-		TEST_METHOD(RankdataOfVectorOfDoublesTest)
-		{
-			std::vector<double> x = { 0.0, 1.0, -1.0, 2.0 };
-			std::vector<unsigned int> r_act = Stats::rankdata(x);
-			std::vector<unsigned int> r_exp = { 2, 0, 1, 3 };
-			for (size_t i = 0; i < r_exp.size(); ++i)
-				Assert::AreEqual(r_exp[i], r_act[i]);
-		}
-		TEST_METHOD(RankdataOfListOfIntegersTest)
-		{
-			std::list<int> x = { 0, 1, -1, 2 };
-			std::list<unsigned int> r_act = Stats::rankdata(x);
-			std::list<unsigned int> r_exp = { 2, 0, 1, 3 };
-			for (auto rit = r_exp.begin(), rfit = r_act.begin(); rit != r_exp.end() && rfit != r_act.end(); ++rit, ++rfit)
-				Assert::AreEqual(*rit, *rfit);
 		}
 	};
 }

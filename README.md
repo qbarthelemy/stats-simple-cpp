@@ -36,22 +36,20 @@ Aggregation functions: `prod`
 Element-wise functions: `linear`, `absolute`, `reciprocal`,
 `power`, `log`, `exp`, `sigmoid`
 
-Others: `set`
+Others: `set`, `rankdata`
 
 #### Stats.hpp
 
-Summary statistics: `mean`, `hmean`, `gmean`, `pmean`,
+Summary statistics: `mean`, `center`, `hmean`, `gmean`, `pmean`,
 `var`, `std`, `hstd`, `gstd`,
-`skewness`, `kurtosis`,
+`skew`, `kurtosis`,
 `median`, `median_abs_deviation`
 
-Transformations: `center`, `zscore`, `gzscore`
+Transformations: `zscore`, `gzscore`
 
 Correlation functions: `pearsonr`, `spearmanr`
 
 Metrics: `accuracy_score`
-
-Others: `rankdata`
 
 #### SimpleLinearRegression.hpp
 

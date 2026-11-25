@@ -72,7 +72,7 @@ public:
 	{
 		auto x_it = x.begin();
 		ContType<double, std::allocator<double>> y(x.size());
-		ContType<double, std::allocator<double>>::iterator y_it = y.begin();
+		typename ContType<double, std::allocator<double>>::iterator y_it = y.begin();
 		for (; x_it != x.end() && y_it != y.end(); ++x_it, ++y_it)
 			*y_it = _coeff * static_cast<double>(*x_it) + _intercept;
 

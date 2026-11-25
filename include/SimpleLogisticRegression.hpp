@@ -86,8 +86,8 @@ public:
 
 			iteration_count++;
 		} while ((std::fabs(d_coeff / _coeff) > _gradient_threshold
-			&& std::fabs(d_intercept / _intercept) > _gradient_threshold)
-			|| iteration_count < _iteration_threshold);
+			|| std::fabs(d_intercept / _intercept) > _gradient_threshold)
+			&& iteration_count < _iteration_threshold);
 	}
 
 	/**
