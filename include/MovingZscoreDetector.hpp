@@ -1,6 +1,7 @@
 #pragma once
 #include <stdexcept>
 #include <cmath>
+#include <limits>
 #include <algorithm>
 
 
@@ -30,20 +31,25 @@ public:
 		_sample_init = sample_init;
 		_var_min = (var_min > 0) ? var_min : 1E-6;
 		_diff_min = (diff_min >= 0) ? diff_min : 0;
-
 		_mean = 0;
 		_var = _var_min;
 		_sample_count = 0;
+		_is_fitted = false;
 	}
 
-	double get_count() const { return _sample_count; }
+	int get_count() const { return _sample_count; }
 
 	double get_mean() const { return _mean; }
 
 	double get_var() const { return _var; }
 
 	template<typename ValType>
-	double get_zscore(ValType x) const { return (x - _mean) / std::sqrt(_var); }
+	double get_zscore(ValType x) const
+	{
+		if (!_is_fitted)
+			return std::numeric_limits<double>::quiet_NaN();
+		return (x - _mean) / std::sqrt(_var);
+	}
 
 	/**
 	* Reset moving z-score detector.
@@ -53,6 +59,7 @@ public:
 		_mean = 0;
 		_var = _var_min;
 		_sample_count = 0;
+		_is_fitted = false;
 	}
 
 	/**
@@ -61,7 +68,7 @@ public:
 	* @tparam ValType The numeric data type of the input.
 	*
 	* @param x Input value.
-	* @param update_factor Update factor in (0, 1) such that:
+	* @param update_factor Update factor in [0, 1] such that:
 	*   mean(t) = (1-a) * mean(t-1) + a * x(t)
 	*   var(t)  = (1-a) * var(t-1)  + a * (x(t) - mean(t))^2
 	* If update factor is constant, it gives an exponential moving average;
@@ -70,6 +77,9 @@ public:
 	template<typename ValType>
 	void partial_fit(ValType x, double update_factor = 0.1)
 	{
+		if (_sample_init <= 0)
+			throw std::invalid_argument("Parameter sample_init must be positive.");
+
 		// online initialization: cumulate value and squared value
 		if (_sample_count < _sample_init)
 		{
@@ -82,13 +92,15 @@ public:
 			{
 				_mean = _mean / _sample_init;
 				_var = _var / _sample_init - _mean * _mean;
+				_var = std::max(_var, _var_min);
+				_is_fitted = true;
 			}
 		}
 		// online update by moving average
 		else
 		{
-			if (update_factor <= 0 || update_factor >= 1)
-				throw std::invalid_argument("Parameter update_factor must be a in (0, 1).");
+			if (update_factor < 0 || update_factor > 1)
+				throw std::invalid_argument("Parameter update_factor must be in [0, 1].");
 
 			_mean = (1.0 - update_factor) * _mean + update_factor * x;
 			_var = (1.0 - update_factor) * _var + update_factor * (x - _mean) * (x - _mean);
@@ -110,7 +122,7 @@ public:
 	template<typename ValType>
 	int detect(ValType x) const
 	{
-		if (_sample_count < _sample_init)
+		if (!_is_fitted)
 			return 0;
 
 		// zscore thresholding: (x - mean) / std = z > z_th => x - mean > z_th * sqrt(var)
@@ -129,5 +141,5 @@ protected:
 
 	double _zscore_threshold, _var_min, _diff_min, _mean, _var;
 	int _sample_init, _sample_count;
-
+	bool _is_fitted;
 };

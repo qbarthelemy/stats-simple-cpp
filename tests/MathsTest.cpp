@@ -48,12 +48,26 @@ namespace StatsSimpleCppTests
 				Assert::AreEqual(y_exp[i], y_act[i]);
 		}
 
-		TEST_METHOD(AbsoluteTest)
+		TEST_METHOD(AbsoluteOfDequeOfFloatsTest)
 		{
 			std::deque<float> x = { -1.0f, 2.0, -3.0f };
 			std::deque<float> x_act = maths::absolute(x);
 			for (size_t i = 0; i < x_act.size(); ++i)
 				Assert::AreEqual(std::abs(x[i]), x_act[i]);
+		}
+		TEST_METHOD(AbsoluteOfVectorOfUnsignedIntegersTest)
+		{
+			std::vector<unsigned int> x = { 0u, 1u, 4000000000u };
+			std::vector<unsigned int> x_act = maths::absolute(x);
+			for (size_t i = 0; i < x.size(); ++i)
+				Assert::AreEqual(x[i], x_act[i]);
+		}
+		TEST_METHOD(AbsoluteOfListOfShortsTest)
+		{
+			std::list<short> x = { -5, 0, 7 };
+			std::list<short> x_act = maths::absolute(x);
+			std::list<short> x_exp = { 5, 0, 7 };
+			Assert::IsTrue(x_exp == x_act);
 		}
 
 		TEST_METHOD(ReciprocalTest)

@@ -72,6 +72,9 @@ namespace stats
 	template<typename ContType>
 	double hmean(const ContType &x)
 	{
+		if (!maths::is_positive(x))
+			throw std::invalid_argument("Input must contain strictly positive value(s).");
+
 		return 1.0 / stats::mean(maths::reciprocal(x));
 	}
 
@@ -103,6 +106,8 @@ namespace stats
 	template<typename ContType>
 	double pmean(const ContType &x, double exp)
 	{
+		if (exp == 0.0)
+			return stats::gmean(x);
 		if (!maths::is_positive(x))
 			throw std::invalid_argument("Input must contain strictly positive value(s).");
 
@@ -126,8 +131,8 @@ namespace stats
 		size_t size = x.size();
 		if (size <= 1)
 			throw std::invalid_argument("Input has not enough values for var.");
-		if (size - ddof == 0)
-			throw std::invalid_argument("Size minus degree of freedom is 0.");
+		if (ddof >= size)
+			throw std::invalid_argument("Invalid degree of freedom.");
 
 		ContType<double, std::allocator<double>> x_cent = stats::center(x);
 		double sxx = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
@@ -259,7 +264,7 @@ namespace stats
 
 		double med;
 		if (size % 2 == 0)
-			med = static_cast<double>(x_sort[size / 2 - 1] + x_sort[size / 2]) / 2;
+			med = (static_cast<double>(x_sort[size / 2 - 1]) + static_cast<double>(x_sort[size / 2])) / 2;
 		else
 			med = static_cast<double>(x_sort[size / 2]);
 		return med;
@@ -314,17 +319,17 @@ namespace stats
 		size_t size = x.size();
 		if (size <= 1)
 			throw std::invalid_argument("Input has not enough values for zscore.");
-		if (size - ddof == 0)
-			throw std::invalid_argument("Size minus degree of freedom is 0.");
+		if (ddof >= size)
+			throw std::invalid_argument("Invalid degree of freedom.");
 
 		ContType<double, std::allocator<double>> x_cent = stats::center(x);
 		double sxx = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
-		double std = std::sqrt(sxx / (size - ddof));
+		double sd = std::sqrt(sxx / (size - ddof));
 
 		ContType<double, std::allocator<double>> z(size);
 		std::transform(
 			x_cent.begin(), x_cent.end(), z.begin(),
-			[std](const double &e) { return e / std; }
+			[sd](const double &e) { return e / sd; }
 		);
 		return z;
 	}

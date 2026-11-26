@@ -14,9 +14,9 @@ namespace StatsSimpleCppTests
 	{
 	public:
 
-		TEST_METHOD(MeanOfVectorOfIntegersTest)
+		TEST_METHOD(MeanOfVectorOfShortsTest)
 		{
-			std::vector<int> x = { 1, 2, 3 };
+			std::vector<short> x = { 1, 2, 3 };
 			Assert::AreEqual(2.0, stats::mean(x));
 		}
 		TEST_METHOD(MeanOfDequeOfFloatsTest)
@@ -67,9 +67,9 @@ namespace StatsSimpleCppTests
 			std::list<double> x = { 1, 2, 3, 4, 5, 6, 7 };
 			Assert::AreEqual(3.3800151591412964, stats::gmean(x), 1e-6);
 		}
-		TEST_METHOD(PMeanOfVectorOfDoublesTest)
+		TEST_METHOD(PMeanOfVectorOfLongLongsTest)
 		{
-			std::vector<double> x = { 1, 2, 3, 4, 5, 6, 7 };
+			std::vector<long long> x = { 1, 2, 3, 4, 5, 6, 7 };
 			Assert::AreEqual(4.157111214492084, stats::pmean(x, 1.3), 1e-6);
 		}
 
@@ -116,9 +116,9 @@ namespace StatsSimpleCppTests
 			Assert::AreEqual(4.09302, stats::kurtosis(x), 1e-5);
 		}
 
-		TEST_METHOD(MedianOfVectorOfIntegersTest)
+		TEST_METHOD(MedianOfVectorOfShortsTest)
 		{
-			std::vector<int> x = { -1, 1, 2, 3, 4, 17 };
+			std::vector<short> x = { -1, 1, 2, 3, 4, 17 };
 			Assert::AreEqual(2.5, stats::median(x));
 		}
 		TEST_METHOD(MedianOfListOfFloatTest)

@@ -21,7 +21,7 @@ or [Eigen](https://gitlab.com/libeigen/eigen));
 - generic templated functions, compatible for different
 [sequence containers](https://en.cppreference.com/w/cpp/named_req/SequenceContainer)
 (`std::list`, `std::vector`, `std::deque`) 
-of different numeric data types (`unsigned int`, `int`, `float`, `double`).
+of different numeric data types (`unsigned int`, `int`, `short`, `long long`, `float`, `double`).
 
 ## Content
 

@@ -152,10 +152,12 @@ namespace maths
 	template<typename ContType>
 	ContType absolute(const ContType &x)
 	{
+		typedef typename ContType::value_type ValType;
+
 		ContType x_new(x.size());
 		std::transform(
 			x.begin(), x.end(), x_new.begin(),
-			static_cast<typename ContType::value_type(*)(typename ContType::value_type)>(&std::abs)
+			[](const ValType &e) { return (e <= ValType(0)) ? static_cast<ValType>(ValType(0) - e) : e; }
 		);
 		return x_new;
 	}

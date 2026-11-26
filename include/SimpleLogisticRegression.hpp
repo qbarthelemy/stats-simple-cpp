@@ -1,5 +1,6 @@
 #pragma once
 #include <stdexcept>
+#include <limits>
 #include <numeric>
 #include <algorithm>
 #include "Stats.hpp"
@@ -27,10 +28,12 @@ public:
 		int iteration_threshold = 100
 	)
 	{
-		_coeff = 1E42, _intercept = 1E42;
+		_coeff = std::numeric_limits<double>::quiet_NaN();
+		_intercept = std::numeric_limits<double>::quiet_NaN();
 		_learning_rate = learning_rate;
 		_gradient_threshold = gradient_threshold;
 		_iteration_threshold = iteration_threshold;
+		_is_fitted = false;
 	}
 
 	double get_coeff() const { return _coeff; }
@@ -73,6 +76,7 @@ public:
 		double d_coeff, d_intercept;
 		int iteration_count = 0;
 
+		_is_fitted = true;
 		_coeff = 0, _intercept = 0;
 		do
 		{
@@ -104,6 +108,9 @@ public:
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	ContType<int, std::allocator<int>> predict(const ContType<ValType, Alloc> &x) const
 	{
+		if (!_is_fitted)
+			throw std::logic_error("Model is not fitted, call fit() first.");
+
 		ContType<double, std::allocator<double>> y_lin = maths::linear(x, get_coeff(), get_intercept());
 		ContType<double, std::allocator<double>> y_sig = maths::sigmoid(y_lin);
 
@@ -137,4 +144,5 @@ protected:
 	double _learning_rate;
 	double _gradient_threshold;
 	int _iteration_threshold;
+	bool _is_fitted;
 };

@@ -19,7 +19,12 @@ public:
 	/**
 	* Create linear model.
 	*/
-	SimpleLinearRegression() { _coeff = 1E42, _intercept = 1E42; }
+	SimpleLinearRegression()
+	{
+		_coeff = std::numeric_limits<double>::quiet_NaN();
+		_intercept = std::numeric_limits<double>::quiet_NaN();
+		_is_fitted = false;
+	}
 
 	double get_coeff() const { return _coeff; }
 
@@ -54,6 +59,7 @@ public:
 		else
 			_coeff = std::numeric_limits<double>::quiet_NaN();
 		_intercept = (sy - _coeff * sx) / size;
+		_is_fitted = true;
 	}
 
 	/**
@@ -70,6 +76,9 @@ public:
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	ContType<double, std::allocator<double>> predict(const ContType<ValType, Alloc> &x) const
 	{
+		if (!_is_fitted)
+			throw std::logic_error("Model is not fitted, call fit() first.");
+
 		auto x_it = x.begin();
 		ContType<double, std::allocator<double>> y(x.size());
 		typename ContType<double, std::allocator<double>>::iterator y_it = y.begin();
@@ -118,4 +127,5 @@ public:
 protected:
 
 	double _coeff, _intercept;
+	bool _is_fitted;
 };
