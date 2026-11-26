@@ -32,43 +32,76 @@ namespace StatsSimpleCppTests
 			Assert::IsFalse(Maths::is_positive(x));
 		}
 
+		TEST_METHOD(ProdTest)
+		{
+			std::vector<int> x = { 1, 2, 3 };
+			Assert::AreEqual(6, Maths::prod(x));
+		}
+
+		TEST_METHOD(LinearTest)
+		{
+			std::vector<int> x = { 1, 2, 3 };
+			double a = 2, b = -2;
+			std::vector<double> y_act = Maths::linear(x, a, b);
+			std::vector<double> y_exp = { 0, 2, 4 };
+			for (size_t i = 0; i < y_exp.size(); ++i)
+				Assert::AreEqual(y_exp[i], y_act[i]);
+		}
+
+		TEST_METHOD(AbsoluteTest)
+		{
+			std::deque<float> x = { -1.0f, 2.0, -3.0f };
+			std::deque<float> x_act = Maths::absolute(x);
+			for (size_t i = 0; i < x_act.size(); ++i)
+				Assert::AreEqual(std::abs(x[i]), x_act[i]);
+		}
+
 		TEST_METHOD(ReciprocalTest)
 		{
 			std::vector<float> x = { -1.0f, 1.0f, 2.0f };
-			std::vector<double> s = Maths::reciprocal(x);
+			std::vector<double> y = Maths::reciprocal(x);
 			for (size_t i = 0; i < x.size(); ++i)
-				Assert::AreEqual(1. / x[i], s[i]);
+				Assert::AreEqual(1. / x[i], y[i]);
 		}
 		TEST_METHOD(PowerTest)
 		{
 			std::vector<int> x = { 0, 1, 2 };
 			double p = 3.2;
-			std::vector<double> s = Maths::power(x, p);
+			std::vector<double> y = Maths::power(x, p);
 			for (size_t i = 0; i < x.size(); ++i)
-				Assert::AreEqual(std::pow(x[i], p), s[i]);
+				Assert::AreEqual(std::pow(x[i], p), y[i]);
 		}
 		TEST_METHOD(LogTest)
 		{
 			std::vector<float> x = { 1.0f, 2.3f, 18.4f };
-			std::vector<double> s = Maths::log(x);
+			std::vector<double> y = Maths::log(x);
 			for (size_t i = 0; i < x.size(); ++i)
-				Assert::AreEqual(std::log(static_cast<double>(x[i])), s[i]);
+				Assert::AreEqual(std::log(static_cast<double>(x[i])), y[i]);
 		}
 		TEST_METHOD(ExpTest)
 		{
 			std::vector<float> x = { 0.0f, 1.0f, -2.0f };
-			std::vector<double> s = Maths::exp(x);
+			std::vector<double> y = Maths::exp(x);
 			for (size_t i = 0; i < x.size(); ++i)
-				Assert::AreEqual(std::exp(static_cast<double>(x[i])), s[i]);
+				Assert::AreEqual(std::exp(static_cast<double>(x[i])), y[i]);
+		}
+
+		TEST_METHOD(SigmoidTest)
+		{
+			std::deque<float> x = { -1.0f, 0.0f, 1.0f };
+			std::deque<double> y_act = Maths::sigmoid(x);
+			std::deque<double> y_exp = { 0.268941, 0.5, 0.731059 };
+			for (size_t i = 0; i < x.size(); ++i)
+				Assert::AreEqual(y_exp[i], y_act[i], 1e-5);
 		}
 
 		TEST_METHOD(SetTest)
 		{
 			std::vector<int> x = { 0, 1, 0, 0, 1, 1, 1, 1, 1, 1 };
-			std::vector<int> s = Maths::set(x);
-			Assert::AreEqual<size_t>(2, s.size());
-			Assert::AreEqual(0, s[0]);
-			Assert::AreEqual(1, s[1]);
+			std::vector<int> y = Maths::set(x);
+			Assert::AreEqual<size_t>(2, y.size());
+			Assert::AreEqual(0, y[0]);
+			Assert::AreEqual(1, y[1]);
 		}
 
 		TEST_METHOD(RankdataOfVectorOfDoublesTest)
