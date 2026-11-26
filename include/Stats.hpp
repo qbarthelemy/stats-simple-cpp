@@ -12,7 +12,7 @@
 /**
 * Statistical functions
 */
-namespace Stats
+namespace stats
 {
 	// --- Parametric summary statistics --- //
 
@@ -50,10 +50,13 @@ namespace Stats
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	ContType<double, std::allocator<double>> center(const ContType<ValType, Alloc> &x)
 	{
-		double mean = Stats::mean(x);
+		double mean = stats::mean(x);
 
 		ContType<double, std::allocator<double>> x_cent(x.size());
-		std::transform(x.begin(), x.end(), x_cent.begin(), std::bind2nd(std::minus<double>(), mean));
+		std::transform(
+			x.begin(), x.end(), x_cent.begin(),
+			[mean](const double &e) { return e - mean; }
+		);
 		return x_cent;
 	}
 
@@ -69,7 +72,7 @@ namespace Stats
 	template<typename ContType>
 	double hmean(const ContType &x)
 	{
-		return 1.0 / Stats::mean(Maths::reciprocal(x));
+		return 1.0 / stats::mean(maths::reciprocal(x));
 	}
 
 	/**
@@ -84,7 +87,7 @@ namespace Stats
 	template<typename ContType>
 	double gmean(const ContType &x)
 	{
-		return std::exp(Stats::mean(Maths::log(x)));
+		return std::exp(stats::mean(maths::log(x)));
 	}
 
 	/**
@@ -100,10 +103,10 @@ namespace Stats
 	template<typename ContType>
 	double pmean(const ContType &x, double exp)
 	{
-		if (!Maths::is_positive(x))
+		if (!maths::is_positive(x))
 			throw std::invalid_argument("Input must contain strictly positive value(s).");
 
-		return std::pow(Stats::mean(Maths::power(x, exp)), 1.0 / exp);
+		return std::pow(stats::mean(maths::power(x, exp)), 1.0 / exp);
 	}
 
 	/**
@@ -126,7 +129,7 @@ namespace Stats
 		if (size - ddof == 0)
 			throw std::invalid_argument("Size minus degree of freedom is 0.");
 
-		ContType<double, std::allocator<double>> x_cent = Stats::center(x);
+		ContType<double, std::allocator<double>> x_cent = stats::center(x);
 		double sxx = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
 		return sxx / (size - ddof);
 	}
@@ -144,7 +147,7 @@ namespace Stats
 	template<typename ContType>
 	double std(const ContType &x, size_t ddof = 0)
 	{
-		return std::sqrt(Stats::var(x, ddof));
+		return std::sqrt(stats::var(x, ddof));
 	}
 
 	/**
@@ -160,7 +163,7 @@ namespace Stats
 	template<typename ContType>
 	double hstd(const ContType &x, size_t ddof = 0)
 	{
-		return 1.0 / Stats::std(Maths::reciprocal(x), ddof);
+		return 1.0 / stats::std(maths::reciprocal(x), ddof);
 	}
 
 	/**
@@ -176,7 +179,7 @@ namespace Stats
 	template<typename ContType>
 	double gstd(const ContType &x, size_t ddof = 0)
 	{
-		return std::exp(Stats::std(Maths::log(x), ddof));
+		return std::exp(stats::std(maths::log(x), ddof));
 	}
 
 	/**
@@ -196,10 +199,10 @@ namespace Stats
 		if (size <= 1)
 			throw std::invalid_argument("Input has not enough values for skewness.");
 
-		ContType<double, std::allocator<double>> x_cent = Stats::center(x);
+		ContType<double, std::allocator<double>> x_cent = stats::center(x);
 		double sx2 = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
 
-		ContType<double, std::allocator<double>> x_cent_3 = Maths::power(x_cent, 3.0);
+		ContType<double, std::allocator<double>> x_cent_3 = maths::power(x_cent, 3.0);
 		double sx3 = std::accumulate(x_cent_3.begin(), x_cent_3.end(), 0.0);
 
 		double skew = (sx3 * std::pow(size, 0.5)) / std::pow(sx2, 1.5);
@@ -223,10 +226,10 @@ namespace Stats
 		if (size <= 1)
 			throw std::invalid_argument("Input has not enough values for kurtosis.");
 
-		ContType<double, std::allocator<double>> x_cent = Stats::center(x);
+		ContType<double, std::allocator<double>> x_cent = stats::center(x);
 		double sx2 = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
 
-		ContType<double, std::allocator<double>> x_cent_4 = Maths::power(x_cent, 4.0);
+		ContType<double, std::allocator<double>> x_cent_4 = maths::power(x_cent, 4.0);
 		double sx4 = std::accumulate(x_cent_4.begin(), x_cent_4.end(), 0.0);
 
 		double kurt = (sx4 * size) / (sx2 * sx2);
@@ -277,13 +280,15 @@ namespace Stats
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	double median_abs_deviation(const ContType<ValType, Alloc> &x, bool is_rescaled = false)
 	{
-		double med = Stats::median(x);
+		double med = stats::median(x);
 
 		ContType<double, std::allocator<double>> x_cent(x.size());
-		std::transform(x.begin(), x.end(), x_cent.begin(), std::bind2nd(std::minus<double>(), med));
-		ContType<double, std::allocator<double>> x_cent_abs = Maths::absolute(x_cent);
+		std::transform(
+			x.begin(), x.end(), x_cent.begin(),
+			[med](const double &e) { return e - med; }
+		);
 
-		double mad = Stats::median(x_cent_abs);
+		double mad = stats::median(maths::absolute(x_cent));
 		if (is_rescaled)
 			mad *= 1.4826;
 		return mad;
@@ -312,12 +317,15 @@ namespace Stats
 		if (size - ddof == 0)
 			throw std::invalid_argument("Size minus degree of freedom is 0.");
 
-		ContType<double, std::allocator<double>> x_cent = Stats::center(x);
+		ContType<double, std::allocator<double>> x_cent = stats::center(x);
 		double sxx = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
 		double std = std::sqrt(sxx / (size - ddof));
 
 		ContType<double, std::allocator<double>> z(size);
-		std::transform(x_cent.begin(), x_cent.end(), z.begin(), std::bind2nd(std::divides<double>(), std));
+		std::transform(
+			x_cent.begin(), x_cent.end(), z.begin(),
+			[std](const double &e) { return e / std; }
+		);
 		return z;
 	}
 
@@ -336,7 +344,7 @@ namespace Stats
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	ContType<double, std::allocator<double>> gzscore(const ContType<ValType, Alloc> &x, size_t ddof = 0)
 	{
-		return Stats::zscore(Maths::log(x), ddof);
+		return stats::zscore(maths::log(x), ddof);
 	}
 
 	// --- Correlation functions --- //
@@ -360,8 +368,8 @@ namespace Stats
 		if (size == 0)
 			throw std::invalid_argument("Inputs have not enough values for correlation.");
 
-		ContType<double, std::allocator<double>> x_cent = Stats::center(x);
-		ContType<double, std::allocator<double>> y_cent = Stats::center(y);
+		ContType<double, std::allocator<double>> x_cent = stats::center(x);
+		ContType<double, std::allocator<double>> y_cent = stats::center(y);
 
 		double sxx = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
 		double syy = std::inner_product(y_cent.begin(), y_cent.end(), y_cent.begin(), 0.0);
@@ -385,11 +393,11 @@ namespace Stats
 	* @return Spearman rank-order correlation coefficient of `x` and `y`.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double spearmanr(const ContType<ValType, Alloc> &x, const ContType<ValType, Alloc> &y)
+	double spearmanrho(const ContType<ValType, Alloc> &x, const ContType<ValType, Alloc> &y)
 	{
-		ContType<unsigned int, std::allocator<unsigned int>> xr = Maths::rankdata(x);
-		ContType<unsigned int, std::allocator<unsigned int>> yr = Maths::rankdata(y);
-		return Stats::pearsonr(xr, yr);
+		ContType<unsigned int, std::allocator<unsigned int>> xr = maths::rankdata(x);
+		ContType<unsigned int, std::allocator<unsigned int>> yr = maths::rankdata(y);
+		return stats::pearsonr(xr, yr);
 	}
 
 	// --- Metrics --- //

@@ -12,7 +12,7 @@
 /**
 * Mathematical functions
 */
-namespace Maths
+namespace maths
 {
 	// --- Integer input functions --- //
 
@@ -221,7 +221,7 @@ namespace Maths
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	ContType<double, std::allocator<double>> log(const ContType<ValType, Alloc> &x)
 	{
-		if (!Maths::is_positive(x))
+		if (!maths::is_positive(x))
 			throw std::invalid_argument("Input must contain strictly positive value(s).");
 
 		ContType<double, std::allocator<double>> x_new(x.size());
@@ -340,7 +340,7 @@ namespace Maths
 		for (i = 0; x_it != x.end() && xr_it != xr.end(); ++i, ++x_it, ++xr_it)
 			*xr_it = std::make_pair(*x_it, static_cast<unsigned int>(i));
 
-		std::sort(xr.begin(), xr.end(), Maths::op_sort_increase<ValType>);
+		std::sort(xr.begin(), xr.end(), maths::op_sort_increase<ValType>);
 
 		ContType<unsigned int, std::allocator<unsigned int>> ranks(size);
 		typename ContType<unsigned int, std::allocator<unsigned int>>::iterator r_it = ranks.begin();

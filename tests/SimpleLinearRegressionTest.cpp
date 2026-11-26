@@ -13,7 +13,7 @@ namespace StatsSimpleCppTests
 	{
 	public:
 
-		TEST_METHOD(SimpleLinearRegressionExample)
+		TEST_METHOD(SimpleLinearRegressionOnListOfDoublesTest)
 		{
 			std::list<double> x = { 55.1, 13, -75, 17.5, 89 }, y = { -2, 15, 7.2, 10, -1 };
 			SimpleLinearRegression slr = SimpleLinearRegression();
@@ -22,7 +22,7 @@ namespace StatsSimpleCppTests
 			y = slr.predict(x);
 		}
 
-		TEST_METHOD(SimpleLinearRegressionFitPredict)
+		TEST_METHOD(SimpleLinearRegressionFitPredictOnVectorOfIntegersTest)
 		{
 			std::vector<int> x = { -1, 0, 1, 2, 3, 4 };
 			std::vector<int> y = { 42, 41, 40, 39, 38, 37 };
@@ -33,7 +33,7 @@ namespace StatsSimpleCppTests
 			Assert::AreEqual(36.0, z[0]);
 		}
 
-		TEST_METHOD(SimpleLinearRegressionFitScore)
+		TEST_METHOD(SimpleLinearRegressionFitScoreOnDequeOfDoublesTest)
 		{
 			std::deque<double> x = { -1.0, 0.0, 1.0, 2.0, 3.0, 4.0 };
 			std::deque<double> y = { 42.0, 41.0, 40.0, 39.0, 38.0, 37.0 };

@@ -61,7 +61,7 @@ public:
 			throw std::invalid_argument("Inputs have not the same size.");
 		if (size < 2)
 			throw std::invalid_argument("Inputs have not enough values for fit.");
-		ContType<int, std::allocator<int>> y_set = Maths::set(y);
+		ContType<int, std::allocator<int>> y_set = maths::set(y);
 		if (y_set.size() != 2)
 			throw std::invalid_argument("Targets must contain two classes of values.");
 		if ((y_set.front() != 0 && y_set.front() != 1) || (y_set.back() != 0 && y_set.back() != 1))
@@ -104,8 +104,8 @@ public:
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	ContType<int, std::allocator<int>> predict(const ContType<ValType, Alloc> &x) const
 	{
-		ContType<double, std::allocator<double>> y_lin = Maths::linear(x, get_coeff(), get_intercept());
-		ContType<double, std::allocator<double>> y_sig = Maths::sigmoid(y_lin);
+		ContType<double, std::allocator<double>> y_lin = maths::linear(x, get_coeff(), get_intercept());
+		ContType<double, std::allocator<double>> y_sig = maths::sigmoid(y_lin);
 
 		ContType<int, std::allocator<int>> y(x.size());
 		std::transform(y_sig.begin(), y_sig.end(), y.begin(), [](double e) { return e >= 0.5 ? 1 : 0; });
@@ -128,7 +128,7 @@ public:
 	double score(const ContType<ValType, Alloc> &x, const ContType<int, std::allocator<int>> &y) const
 	{
 		ContType<int, std::allocator<int>> y_predict = predict(x);
-		return Stats::accuracy_score(y, y_predict);
+		return stats::accuracy_score(y, y_predict);
 	}
 
 protected:

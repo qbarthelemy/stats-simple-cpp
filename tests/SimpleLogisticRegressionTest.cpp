@@ -13,7 +13,7 @@ namespace StatsSimpleCppTests
 	{
 	public:
 
-		TEST_METHOD(SimpleLogisticRegressionFitPredict)
+		TEST_METHOD(SimpleLogisticRegressionFitPredictOnVectorOfIntegersTest)
 		{
 			std::vector<int> x = { -1, 0, 1, 2, 3, 4 };
 			std::vector<int> y = { 0, 0, 0, 1, 1, 1 };
@@ -23,7 +23,7 @@ namespace StatsSimpleCppTests
 			std::vector<int> z = slr.predict(x);
 			Assert::AreEqual(1, z[0]);
 		}
-		TEST_METHOD(SimpleLogisticRegressionFitScore)
+		TEST_METHOD(SimpleLogisticRegressionFitScoreOnDequeOfFloatsTest)
 		{
 			std::deque<float> x = { -1.0f, 0.0f, 1.0f, 12.0f, 13.0f, 14.0f };
 			std::deque<int> y = { 1, 1, 1, 0, 0, 0 };
@@ -32,7 +32,7 @@ namespace StatsSimpleCppTests
 			double acc = slr.score(x, y);
 			Assert::AreEqual(1.0, acc);
 		}
-		TEST_METHOD(SimpleLogisticRegressionFitScore2)
+		TEST_METHOD(SimpleLogisticRegressionFitScoreOnListOfDoublesTest)
 		{
 			std::list<double> x = { -10.2, 0.1, 1.0, 12.0, 300.0, 140.0 };
 			std::list<int> y = { 1, 1, 1, 0, 0, 0 };

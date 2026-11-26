@@ -51,9 +51,8 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <!-- The headers rely on MSVC permissive behaviours (e.g. missing typename). -->
+      <!-- The headers rely on MSVC permissive behaviours. -->
       <ConformanceMode>false</ConformanceMode>
-      <!-- C++14: std::bind2nd (used by Stats.hpp) is removed from the MSVC STL in C++17 mode. -->
       <LanguageStandard>stdcpp14</LanguageStandard>
       <ExceptionHandling>Sync</ExceptionHandling>
       <SDLCheck>false</SDLCheck>

@@ -47,13 +47,13 @@ Summary statistics: `mean`, `center`, `hmean`, `gmean`, `pmean`,
 
 Transformations: `zscore`, `gzscore`
 
-Correlation functions: `pearsonr`, `spearmanr`
+Correlation functions: `pearsonr`, `spearmanrho`
 
 Metrics: `accuracy_score`
 
 #### SimpleLinearRegression.hpp
 
-Class `SimpleLinearRegression`,
+Class `SimpleLinearRegression` for linear regression,
 with `fit`, `predict`, and `score` (coefficient of determination R²).
 
 #### SimpleLogisticRegression.hpp

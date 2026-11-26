@@ -109,7 +109,7 @@ public:
 		double syy = std::inner_product(y.begin(), y.end(), y.begin(), 0.0);
 		double sstot = syy - sy * sy / size;
 		if (sstot <= 0.0)
-			return -1.0;
+			return std::numeric_limits<double>::quiet_NaN();
 
 		double r2 = 1.0 - ssres / sstot;
 		return r2;
