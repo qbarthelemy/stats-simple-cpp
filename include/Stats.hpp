@@ -386,18 +386,15 @@ namespace stats
 	* Spearman rank-order correlation coefficient.
 	*
 	* @tparam ContType The type of the sequence containers.
-	* @tparam ValType The numeric data type of the values of the sequence containers.
 	*
 	* @param x, y Input sequence containers.
 	*
 	* @return Spearman rank-order correlation coefficient of `x` and `y`.
 	*/
-	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double spearmanrho(const ContType<ValType, Alloc> &x, const ContType<ValType, Alloc> &y)
+	template<typename ContType>
+	double spearmanrho(const ContType &x, const ContType &y)
 	{
-		ContType<unsigned int, std::allocator<unsigned int>> xr = maths::rankdata(x);
-		ContType<unsigned int, std::allocator<unsigned int>> yr = maths::rankdata(y);
-		return stats::pearsonr(xr, yr);
+		return stats::pearsonr(maths::rankdata(x), maths::rankdata(y));
 	}
 
 	// --- Metrics --- //

@@ -1,6 +1,7 @@
 #pragma once
 #include <stdexcept>
 #include <cmath>
+#include <cstdlib>
 #include <vector>
 #include <memory>
 #include <numeric>
@@ -322,15 +323,19 @@ namespace maths
 	/**
 	* Assign ranks to data.
 	*
+	* Ranks start at 1 and follow the order of `x`. Tied values receive the average of their ranks,
+	* as `scipy.stats.rankdata` does.
+	*
 	* @tparam ContType The type of the sequence container.
 	* @tparam ValType The numeric data type of the values of the sequence container.
 	*
-	* @param x Input sequence container.
+	* @param x Input sequence container, without NaN.
 	*
-	* @return Output sequence container containing increasing ranks of values of `x`.
+	* @return Output sequence container containing the ranks of values of `x`,
+	* whose data type is double to handle ties.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	ContType<unsigned int, std::allocator<unsigned int>> rankdata(const ContType<ValType, Alloc> &x)
+	ContType<double, std::allocator<double>> rankdata(const ContType<ValType, Alloc> &x)
 	{
 		size_t size = x.size(), i = 0;
 
@@ -338,15 +343,25 @@ namespace maths
 		std::vector<std::pair<ValType, unsigned int>> xr(size);
 		typename std::vector<std::pair<ValType, unsigned int>>::iterator xr_it = xr.begin();
 		for (i = 0; x_it != x.end() && xr_it != xr.end(); ++i, ++x_it, ++xr_it)
+		{
+			if (std::isnan(static_cast<double>(*x_it)))
+				throw std::invalid_argument("Input contains NaN value(s).");
 			*xr_it = std::make_pair(*x_it, static_cast<unsigned int>(i));
+		}
 
 		std::sort(xr.begin(), xr.end(), maths::op_sort_increase<ValType>);
 
-		ContType<unsigned int, std::allocator<unsigned int>> ranks(size);
-		typename ContType<unsigned int, std::allocator<unsigned int>>::iterator r_it = ranks.begin();
-		for (xr_it = xr.begin(); xr_it != xr.end() && r_it != ranks.end(); ++xr_it, ++r_it)
-			*r_it = (*xr_it).second;
+		std::vector<double> ranks(size);
+		for (i = 0; i < size; )
+		{
+			size_t j = i;
+			while (j < size && xr[j].first == xr[i].first)
+				++j;
+			for (size_t k = i; k < j; ++k)
+				ranks[xr[k].second] = (i + 1 + j) / 2.0; // average of ranks i+1, ..., j
+			i = j;
+		}
 
-		return ranks;
+		return ContType<double, std::allocator<double>>(ranks.begin(), ranks.end());
 	}
 }

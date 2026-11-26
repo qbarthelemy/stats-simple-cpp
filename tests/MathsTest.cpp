@@ -107,18 +107,34 @@ namespace StatsSimpleCppTests
 		TEST_METHOD(RankdataOfVectorOfDoublesTest)
 		{
 			std::vector<double> x = { 0.0, 1.0, -1.0, 2.0 };
-			std::vector<unsigned int> r_act = maths::rankdata(x);
-			std::vector<unsigned int> r_exp = { 2, 0, 1, 3 };
+			std::vector<double> r_act = maths::rankdata(x);
+			std::vector<double> r_exp = { 2.0, 3.0, 1.0, 4.0 };
 			for (size_t i = 0; i < r_exp.size(); ++i)
 				Assert::AreEqual(r_exp[i], r_act[i]);
 		}
 		TEST_METHOD(RankdataOfListOfIntegersTest)
 		{
 			std::list<int> x = { 0, 1, -1, 2 };
-			std::list<unsigned int> r_act = maths::rankdata(x);
-			std::list<unsigned int> r_exp = { 2, 0, 1, 3 };
+			std::list<double> r_act = maths::rankdata(x);
+			std::list<double> r_exp = { 2.0, 3.0, 1.0, 4.0 };
 			for (auto rit = r_exp.begin(), rfit = r_act.begin(); rit != r_exp.end() && rfit != r_act.end(); ++rit, ++rfit)
 				Assert::AreEqual(*rit, *rfit);
+		}
+		TEST_METHOD(RankdataWithTiesTest)
+		{
+			std::vector<double> x = { 0.0, 2.0, 3.0, 2.0 };
+			std::vector<double> r_act = maths::rankdata(x);
+			std::vector<double> r_exp = { 1.0, 2.5, 4.0, 2.5 };
+			for (size_t i = 0; i < r_exp.size(); ++i)
+				Assert::AreEqual(r_exp[i], r_act[i]);
+		}
+		TEST_METHOD(RankdataWithNaNTest)
+		{
+			Assert::ExpectException<std::invalid_argument>([]
+				{
+					std::vector<double> x = { 1.0, std::nan(""), 2.0 };
+					maths::rankdata(x);
+				});
 		}
 	};
 }

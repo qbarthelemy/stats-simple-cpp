@@ -190,6 +190,12 @@ namespace StatsSimpleCppTests
 				});
 		}
 
+		TEST_METHOD(SpearmanCorrelationPositiveTest)
+		{
+			std::vector<double> v1 = { 1, 2, 3, 4, 5 };
+			std::vector<double> v2 = { 5, 6, 7, 8, 7 };
+			Assert::AreEqual(0.8207826816681233, stats::spearmanrho(v1, v2));
+		}
 		TEST_METHOD(SpearmanCorrelationNegativeTest)
 		{
 			std::list<int> v1 = { 0, 1, 2, 3, 4, 5 };
