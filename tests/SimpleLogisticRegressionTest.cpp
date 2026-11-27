@@ -20,8 +20,10 @@ namespace StatsSimpleCppTests
 			SimpleLogisticRegression slr = SimpleLogisticRegression(0.1, 0.1, 5000);
 			slr.fit(x, y);
 			x = { 5 };
-			std::vector<int> z = slr.predict(x);
-			Assert::AreEqual(1, z[0]);
+			std::vector<double> proba = slr.predict_proba(x);
+			Assert::AreEqual(0.992221, proba[0], 1e-5);
+			std::vector<int> pred = slr.predict(x);
+			Assert::AreEqual(1, pred[0]);
 		}
 		TEST_METHOD(SimpleLogisticRegressionFitScoreOnDequeOfFloatsTest)
 		{

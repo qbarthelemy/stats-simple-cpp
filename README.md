@@ -21,7 +21,8 @@ or [Eigen](https://gitlab.com/libeigen/eigen));
 - generic templated functions, compatible for different
 [sequence containers](https://en.cppreference.com/w/cpp/named_req/SequenceContainer)
 (`std::list`, `std::vector`, `std::deque`) 
-of different numeric data types (`unsigned int`, `int`, `short`, `long long`, `float`, `double`).
+of different numeric data types
+(`unsigned int`, `int`, `short`, `long`, `long long`, `float`, `double`).
 
 ## Content
 
@@ -59,7 +60,7 @@ with `fit`, `predict`, and `score` (coefficient of determination R²).
 #### SimpleLogisticRegression.hpp
 
 Class `SimpleLogisticRegression` for binary classification,
-with `fit`, `predict`, and `score` (accuracy).
+with `fit`, `predict_proba`, `predict`, and `score` (accuracy).
 
 #### MovingZscoreDetector.hpp
 

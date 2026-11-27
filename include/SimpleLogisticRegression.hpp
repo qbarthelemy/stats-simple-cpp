@@ -23,7 +23,7 @@ public:
 	* @param iteration_threshold Threshold on maximal number of iterations for gradient descent.
 	*/
 	SimpleLogisticRegression(
-		double learning_rate = 0.001,
+		double learning_rate = 0.1,
 		double gradient_threshold = 0.01,
 		int iteration_threshold = 100
 	)
@@ -71,17 +71,16 @@ public:
 			throw std::invalid_argument("Targets must contain binary values, 0 or 1.");
 
 		double size_inv = 1.0 / size;
-		ContType<int, std::allocator<int>> y_predict(size);
+		ContType<double, std::allocator<double>> y_proba(size);
 		ContType<double, std::allocator<double>> res(size);
 		double d_coeff, d_intercept;
 		int iteration_count = 0;
 
-		_is_fitted = true;
 		_coeff = 0, _intercept = 0;
 		do
 		{
-			y_predict = predict(x);
-			std::transform(y_predict.begin(), y_predict.end(), y.begin(), res.begin(), std::minus<double>());
+			y_proba = _predict_proba(x, _coeff, _intercept);
+			std::transform(y_proba.begin(), y_proba.end(), y.begin(), res.begin(), std::minus<double>());
 
 			d_coeff = size_inv * std::inner_product(x.begin(), x.end(), res.begin(), 0.0);
 			d_intercept = size_inv * std::accumulate(res.begin(), res.end(), 0.0);
@@ -92,32 +91,48 @@ public:
 		} while ((std::fabs(d_coeff / _coeff) > _gradient_threshold
 			|| std::fabs(d_intercept / _intercept) > _gradient_threshold)
 			&& iteration_count < _iteration_threshold);
+		_is_fitted = true;
 	}
 
 	/**
-	* Predict using the logistic model.
+	* Predict probabilities using the logistic model.
 	*
 	* @tparam ContType The type of the sequence container.
 	* @tparam ValType The numeric data type of the values of the sequence container.
 	*
 	* @param x Input sequence container.
 	*
-	* @return Output sequence container containing predicted values from `x`,
+	* @return Output sequence container containing probabilities of class 1 from `x`.
+	*/
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	ContType<double, std::allocator<double>> predict_proba(const ContType<ValType, Alloc> &x) const
+	{
+		if (!_is_fitted)
+			throw std::logic_error("Model is not fitted, call fit() first.");
+
+		return _predict_proba(x, get_coeff(), get_intercept());
+	}
+
+	/**
+	* Predict labels using the logistic model.
+	*
+	* @tparam ContType The type of the sequence container.
+	* @tparam ValType The numeric data type of the values of the sequence container.
+	*
+	* @param x Input sequence container.
+	*
+	* @return Output sequence container containing predicted labels from `x`,
 	* whose data type is int to provide a binary target value.
 	*/
 	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
 	ContType<int, std::allocator<int>> predict(const ContType<ValType, Alloc> &x) const
 	{
-		if (!_is_fitted)
-			throw std::logic_error("Model is not fitted, call fit() first.");
+		ContType<double, std::allocator<double>> y_proba = predict_proba(x);
 
-		ContType<double, std::allocator<double>> y_lin = maths::linear(x, get_coeff(), get_intercept());
-		ContType<double, std::allocator<double>> y_sig = maths::sigmoid(y_lin);
+		ContType<int, std::allocator<int>> y_pred(x.size());
+		std::transform(y_proba.begin(), y_proba.end(), y_pred.begin(), [](double e) { return e >= 0.5 ? 1 : 0; });
 
-		ContType<int, std::allocator<int>> y(x.size());
-		std::transform(y_sig.begin(), y_sig.end(), y.begin(), [](double e) { return e >= 0.5 ? 1 : 0; });
-
-		return y;
+		return y_pred;
 	}
 
 	/**
@@ -139,6 +154,12 @@ public:
 	}
 
 protected:
+
+	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
+	ContType<double, std::allocator<double>> _predict_proba(const ContType<ValType, Alloc> &x, double a, double b) const
+	{
+		return maths::sigmoid(maths::linear(x, a, b));
+	}
 
 	double _coeff, _intercept;
 	double _learning_rate;
