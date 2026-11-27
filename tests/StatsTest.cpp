@@ -92,9 +92,9 @@ namespace StatsSimpleCppTests
 				});
 		}
 
-		TEST_METHOD(StdOfVectorOfDoublesTest)
+		TEST_METHOD(StdOfVectorOfLongsTest)
 		{
-			std::vector<double> x = { 0.0, 1.0, 2.0, 3.0, 4.0 };
+			std::vector<long> x = { 0, 1, 2, 3, 4 };
 			Assert::AreEqual(std::sqrt(2.0), stats::std(x));
 		}
 
@@ -209,10 +209,10 @@ namespace StatsSimpleCppTests
 			std::vector<int> y2 = { 0, 0, 0, 1, 1, 1 };
 			Assert::AreEqual(1.0, stats::accuracy_score(y1, y2));
 		}
-		TEST_METHOD(AccuracyListOfIntegersTest)
+		TEST_METHOD(AccuracyListOfDoublesTest)
 		{
-			std::list<int> y1 = { 0, 0, 1, 1 };
-			std::list<int> y2 = { 0, 1, 1, 0 };
+			std::list<double> y1 = { 0, 0, 1, 1 };
+			std::list<double> y2 = { 0, 1, 1, 0 };
 			Assert::AreEqual(0.5, stats::accuracy_score(y1, y2));
 		}
 	};

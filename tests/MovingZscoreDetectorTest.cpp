@@ -37,6 +37,7 @@ namespace StatsSimpleCppTests
 			for (size_t i = 0; i < x.size(); i++)
 				mzd.partial_fit(x[i], 0.5);
 
+			Assert::AreEqual(4.35546, mzd.get_zscore(3), 1e-5);
 			Assert::AreEqual(1, mzd.detect(5.0));
 			Assert::AreEqual(0, mzd.detect(0.0));
 		}

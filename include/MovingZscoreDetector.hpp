@@ -25,11 +25,11 @@ public:
 	* @param var_min Minimal value for variance, strictly positive.
 	* @param diff_min Minimal value for difference x - mean, positive. Avoid spurious detections on small raw differences.
 	*/
-	MovingZscoreDetector(double zscore_threshold = 2.5, int sample_init = 10, double var_min = 1E-6, double diff_min = 0)
+	MovingZscoreDetector(double zscore_threshold = 2.5, int sample_init = 10, double var_min = 1e-6, double diff_min = 0)
 	{
 		_zscore_threshold = zscore_threshold;
 		_sample_init = sample_init;
-		_var_min = (var_min > 0) ? var_min : 1E-6;
+		_var_min = (var_min > 0) ? var_min : 1e-6;
 		_diff_min = (diff_min >= 0) ? diff_min : 0;
 		_mean = 0;
 		_var = _var_min;
@@ -43,8 +43,7 @@ public:
 
 	double get_var() const { return _var; }
 
-	template<typename ValType>
-	double get_zscore(ValType x) const
+	double get_zscore(double x) const
 	{
 		if (!_is_fitted)
 			return std::numeric_limits<double>::quiet_NaN();
@@ -65,8 +64,6 @@ public:
 	/**
 	* Fit moving z-score detector with online update.
 	*
-	* @tparam ValType The numeric data type of the input.
-	*
 	* @param x Input value.
 	* @param update_factor Update factor in [0, 1] such that:
 	*   mean(t) = (1-a) * mean(t-1) + a * x(t)
@@ -74,8 +71,7 @@ public:
 	* If update factor is constant, it gives an exponential moving average;
 	* if it is equal to 1/t, it gives a cumulative moving average.
 	*/
-	template<typename ValType>
-	void partial_fit(ValType x, double update_factor = 0.1)
+	void partial_fit(double x, double update_factor = 0.1)
 	{
 		if (_sample_init <= 0)
 			throw std::invalid_argument("Parameter sample_init must be positive.");
@@ -113,14 +109,11 @@ public:
 	/**
 	* Detect anomaly using moving z-score detector.
 	*
-	* @tparam ValType The numeric data type of the input.
-	*
 	* @param x Input value.
 	*
 	* @return Prediction of anomaly: 1 if anomaly detected, 0 otherwise.
 	*/
-	template<typename ValType>
-	int detect(ValType x) const
+	int detect(double x) const
 	{
 		if (!_is_fitted)
 			return 0;

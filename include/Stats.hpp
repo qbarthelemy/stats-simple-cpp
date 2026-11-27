@@ -125,8 +125,8 @@ namespace stats
 	*
 	* @return Variance of `x`.
 	*/
-	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double var(const ContType<ValType, Alloc> &x, size_t ddof = 0)
+	template<typename ContType>
+	double var(const ContType &x, size_t ddof = 0)
 	{
 		size_t size = x.size();
 		if (size <= 1)
@@ -134,7 +134,7 @@ namespace stats
 		if (ddof >= size)
 			throw std::invalid_argument("Invalid degree of freedom.");
 
-		ContType<double, std::allocator<double>> x_cent = stats::center(x);
+		auto x_cent = stats::center(x);
 		double sxx = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
 		return sxx / (size - ddof);
 	}
@@ -197,17 +197,17 @@ namespace stats
 	*
 	* @return Skewness of `x`.
 	*/
-	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double skew(const ContType<ValType, Alloc> &x)
+	template<typename ContType>
+	double skew(const ContType &x)
 	{
 		size_t size = x.size();
 		if (size <= 1)
 			throw std::invalid_argument("Input has not enough values for skewness.");
 
-		ContType<double, std::allocator<double>> x_cent = stats::center(x);
+		auto x_cent = stats::center(x);
 		double sx2 = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
 
-		ContType<double, std::allocator<double>> x_cent_3 = maths::power(x_cent, 3.0);
+		auto x_cent_3 = maths::power(x_cent, 3.0);
 		double sx3 = std::accumulate(x_cent_3.begin(), x_cent_3.end(), 0.0);
 
 		double skew = (sx3 * std::pow(size, 0.5)) / std::pow(sx2, 1.5);
@@ -224,17 +224,17 @@ namespace stats
 	*
 	* @return Non-normalized kurtosis of `x`.
 	*/
-	template<template<typename, typename> class ContType, typename ValType, typename Alloc>
-	double kurtosis(const ContType<ValType, Alloc> &x)
+	template<typename ContType>
+	double kurtosis(const ContType &x)
 	{
 		size_t size = x.size();
 		if (size <= 1)
 			throw std::invalid_argument("Input has not enough values for kurtosis.");
 
-		ContType<double, std::allocator<double>> x_cent = stats::center(x);
+		auto x_cent = stats::center(x);
 		double sx2 = std::inner_product(x_cent.begin(), x_cent.end(), x_cent.begin(), 0.0);
 
-		ContType<double, std::allocator<double>> x_cent_4 = maths::power(x_cent, 4.0);
+		auto x_cent_4 = maths::power(x_cent, 4.0);
 		double sx4 = std::accumulate(x_cent_4.begin(), x_cent_4.end(), 0.0);
 
 		double kurt = (sx4 * size) / (sx2 * sx2);
@@ -430,7 +430,7 @@ namespace stats
 		auto y_predict_it = y_predict.begin();
 
 		for (; y_true_it != y_true.end(); ++y_true_it, ++y_predict_it, ++score_it)
-			*score_it = (static_cast<int>(*y_true_it) == static_cast<int>(*y_predict_it));
+			*score_it = (*y_true_it == *y_predict_it);
 		auto c = std::count(score.begin(), score.end(), true);
 
 		return static_cast<double>(c) / size;
